@@ -46,6 +46,11 @@ async function main() {
 }
 main();*/
 
+
+//prompt = "Hey,Summarize me this document.!"
+//response = claude_api.send_message(prompt, conversation_id,attachment="path/to/file.pdf",timeout=600)
+
+
 const image_url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
 const image_media_type = "image/jpeg"
 const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
