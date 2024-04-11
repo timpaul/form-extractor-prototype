@@ -1,0 +1,36 @@
+{% extends "govuk/template.njk" %}
+
+{% block head %}
+  <link href="assets/style.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+
+{{ govukFileUpload({
+  id: "file-upload-1",
+  name: "fileUpload1",
+  label: {
+    text: "Choose a form"
+  }
+}) }}
+
+  </div>
+  <div class="govuk-grid-column-one-third">
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script src="/govuk-frontend/all.js"></script>
+  <script src="/assets/scripts.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{
+  "name": "form-converter",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "scss": "sass --watch assets/style.scss public/assets/style.css"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.3",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "govuk-frontend": "^4.7.0",
+    "node-fetch": "^3.3.2",
+    "nunjucks": "^3.2.4"
+  },
+  "exports": "./server.js",
+  "type": "module",
+  "devDependencies": {
+    "sass": "^1.69.5"
+  }
+}
