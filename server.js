@@ -28,37 +28,63 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-const anthropic = new Anthropic(); // gets API Key from environment variable ANTHROPIC_API_KEY
+// CALL CLAUDE
 
-/*
-async function main() {
-  const result = await anthropic.messages.create({
-    messages: [
-      {
-        role: 'user',
-        content: 'Hey Claude!?',
-      },
-    ],
-    model: 'claude-3-opus-20240229',
-    max_tokens: 1024,
-  });
-  console.dir(result);
-}
-main();*/
+const anthropic = new Anthropic(); 
+// get API Key from environment variable ANTHROPIC_API_KEY
 
+const image_url = "https://raw.githubusercontent.com/timpaul/form-converter/main/assets/CH2_English_online.jpg"
+// use the form image hosted on GitHub
 
-//prompt = "Hey,Summarize me this document.!"
-//response = claude_api.send_message(prompt, conversation_id,attachment="path/to/file.pdf",timeout=600)
-
-
-const image_url = "https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
 const image_media_type = "image/jpeg"
 const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
 const image_data = Buffer.from(image_array_buffer).toString('base64');
 
-const message = await anthropic.messages.create({
+
+// CREATE THE MESSAGE
+// The 'tools' section specifies the JSON schema that the response should conform to
+// The 'messages' section send the image and a prompt to Claude
+
+const message = await anthropic.beta.tools.messages.create({
   model: 'claude-3-opus-20240229',
   max_tokens: 1024,
+  tools: [
+        {
+            "name": "extract_form_questions",
+            "description": "Extract the questions from an image of a form.",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                  "pages": {
+                      "type": "array",
+                      "description": "An array of the questions in the form",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                              "type": "number",
+                              "description": "The number of the question"
+                          },
+                          "question_text": {
+                              "type": "string",
+                              "description": "The title of the question"
+                          },
+                          "hint_text": {
+                              "type": "string",
+                              "description": "Any hint text associated with the question. It usually appears just below the question title. Use 'null' if there is no hint text"
+                          },
+                          "answer_type": {
+                              "type": "string",
+                              "description": "The type of form fields associated with the question",
+                              "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text"]
+                          }                        
+                        }
+                      }
+                  }
+                }
+            }
+        }
+      ],
   messages: [
         {
             "role": "user",
@@ -70,27 +96,33 @@ const message = await anthropic.messages.create({
                         "media_type": image_media_type,
                         "data": image_data,
                     },
+                },
+                {
+                    "type": "text",
+                    "text": 'Extract the questions from this form? Use the extract_form_questions tool'
                 }
             ],
         }
       ]
 });
-console.log(message);
+
+const result = message.content[1].input;
+console.log(result);
 
 
+// THE WEB PAGES
 
 const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
-  res.render('index.html')
+  res.render('index.html', {result: JSON.stringify(result, null, 2)})
 })
 
 /* Render other pages */
 app.get('/:page', (req, res) => {
   res.render(req.params.page)
 })
-
 
 app.listen(port, () => {
 	console.log('Server running at http://localhost:3000');

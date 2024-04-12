@@ -7,21 +7,18 @@
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-one-half">
 
+  <h2 class="govuk-heading-m">Original form</h2>
 
-{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
-
-{{ govukFileUpload({
-  id: "file-upload-1",
-  name: "fileUpload1",
-  label: {
-    text: "Choose a form"
-  }
-}) }}
+  <img width="100%" style="border: 1px solid #b1b4b6" src="https://raw.githubusercontent.com/timpaul/form-converter/main/assets/CH2_English_online.jpg" />
 
   </div>
-  <div class="govuk-grid-column-one-third">
+  <div class="govuk-grid-column-one-half">
+
+  <h2 class="govuk-heading-m">Extracted form</h2>
+
+  <pre>{{result}}</pre>
 
   </div>
 </div>
