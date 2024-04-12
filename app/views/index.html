@@ -27,7 +27,8 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="/govuk-frontend/all.js"></script>
+  <!--<script src="/govuk-frontend/all.js"></script>-->
+  <script src="/assets/all.js"></script>
   <script src="/assets/scripts.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}

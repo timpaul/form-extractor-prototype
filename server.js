@@ -45,9 +45,10 @@ const image_data = Buffer.from(image_array_buffer).toString('base64');
 // The 'tools' section specifies the JSON schema that the response should conform to
 // The 'messages' section send the image and a prompt to Claude
 
+/*
 const message = await anthropic.beta.tools.messages.create({
   model: 'claude-3-opus-20240229',
-  max_tokens: 1024,
+  max_tokens: 2048,
   tools: [
         {
             "name": "extract_form_questions",
@@ -107,6 +108,10 @@ const message = await anthropic.beta.tools.messages.create({
 });
 
 const result = message.content[1].input;
+*/
+
+const result = "RESULT!";
+
 console.log(result);
 
 
