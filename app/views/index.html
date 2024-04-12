@@ -2,6 +2,18 @@
 
 {% block head %}
   <link href="assets/style.css" rel="stylesheet">
+
+  <style type="text/css">
+    .question{
+      border-bottom: 1px solid #b1b4b6;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+    }
+    .question p{
+      margin: 0;
+    }
+
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -11,14 +23,53 @@
 
   <h2 class="govuk-heading-m">Original form</h2>
 
-  <img width="100%" style="border: 1px solid #b1b4b6" src="https://raw.githubusercontent.com/timpaul/form-converter/main/assets/CH2_English_online.jpg" />
+  <img width="100%" style="border: 1px solid #b1b4b6; margin-top: -5px;" src="https://raw.githubusercontent.com/timpaul/form-converter/main/assets/CH2_English_online.jpg" />
 
   </div>
   <div class="govuk-grid-column-one-half">
 
   <h2 class="govuk-heading-m">Extracted form</h2>
 
-  <pre>{{result}}</pre>
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+
+{% set questionHtml %}
+
+<div class="questions">
+{% for question in result.pages %}
+  <div class="question">
+    <span class="govuk-caption-m">Question {{question.id}}</span>
+    <h3 class="govuk-heading-s">{{question.question_text}}</h3>
+    <p class="govuk-body-s">Hint: {{question.hint_text}}</p>
+    <p class="govuk-body-s">Type: {{question.answer_type}}</p>
+  </div>
+{% endfor %}
+</div>
+
+{% endset -%}
+
+{% set jsonHtml %}
+  <pre style="overflow: hidden">{{resultJSON}}</pre>
+{% endset -%}
+
+{{ govukTabs({
+  items: [
+    {
+      label: "Questions",
+      id: "tab1",
+      panel: {
+        html: questionHtml
+      }
+    },
+    {
+      label: "JSON",
+      id: "tab2",
+      panel: {
+        html: jsonHtml
+      }
+    }
+  ]
+}) }}
 
   </div>
 </div>
