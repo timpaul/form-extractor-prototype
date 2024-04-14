@@ -1,27 +1,11 @@
-{% extends "govuk/template.njk" %}
 
-{% block head %}
-  <link href="assets/style.css" rel="stylesheet">
-{% endblock %}
-
-{% block content %}
-
-  <div id="spinner">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; max-width:100%;max-height: 100%;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-      <circle cx="50" cy="50" fill="none" stroke="#000000" stroke-width="15" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
+<body style="background: #f3f2f1">
+  <div id="spinner" style="margin-top: 290px">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; max-width:100%;max-height: 100%;" width="50px" height="50px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+      <circle cx="50" cy="50" fill="none" stroke="#b1b4b6" stroke-width="15" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
       <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="2s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
       </circle>
     </svg>
   </div>
+</body>
 
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-
-{% block bodyEnd %}
-  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="/govuk-frontend/all.js"></script>
-  <script src="/assets/scripts.js"></script>
-  <script>window.GOVUKFrontend.initAll()</script>
-{% endblock %}

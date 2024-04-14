@@ -57,5 +57,20 @@ pre {
 }
 
 .question{
-	border-bottom: 1px solid #b1b4b6;
+  border-bottom: 1px solid #b1b4b6;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+.question p{
+  margin: 0;
+}
+.form-image{
+  width: 100%;
+}
+.form-image-container{
+  border: 1px solid #b1b4b6;
+  min-height: 660px;
+}
+.extracted-form{
+  border: 1px solid #b1b4b6;       
 }
