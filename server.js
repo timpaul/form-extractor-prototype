@@ -49,7 +49,7 @@ app.post('/sendToClaude', async (req, res) => {
     {% endblock %}
 
     {% block content %}
-      <pre style="overflow: hidden; margin: -20px -15px; padding: 20px 15px; background: #f3f2f1">${content}</pre>
+      <pre style="overflow: hidden; margin: -20px -15px; padding: 20px 15px;">${content}</pre>
     {% endblock %}
 
     {% block footer %}
@@ -160,6 +160,11 @@ const port = 3000;
 app.get('/', (req, res) => {
   //res.render('index.html', {result: result, resultJSON: JSON.stringify(result, null, 2)})
   res.render('index.html', {})
+})
+
+/* Render loading page */
+app.get('/loading.html', (req, res) => {
+  res.render('loading.html', {})
 })
 
 /* Render example pages */

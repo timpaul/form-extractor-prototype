@@ -71,6 +71,12 @@ pre {
   border: 1px solid #b1b4b6;
   min-height: 660px;
 }
-.extracted-form{
-  border: 1px solid #b1b4b6;       
+.extracted-form {
+  border: 0px;
+  /*margin: -30px -20px -34px;
+  width: calc(100% + 40px);*/
+}
+
+#tab1{
+  padding: 0;
 }

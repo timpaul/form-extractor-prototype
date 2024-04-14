@@ -8077,11 +8077,18 @@ pre {
 
 .form-image-container {
   border: 1px solid #b1b4b6;
+  margin-top: -5px;
   min-height: 660px;
 }
 
 .extracted-form {
-  border: 1px solid #b1b4b6;
+  border: 0px;
+  /*margin: -30px -20px -34px;
+  width: calc(100% + 40px);*/
+}
+
+#tab1{
+  padding: 0;
 }
 
 /*# sourceMappingURL=style.css.map */
