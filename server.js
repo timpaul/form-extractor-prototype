@@ -3,7 +3,7 @@ import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
 import sass from 'sass';
-import fs from 'fs';
+import fse from 'fs-extra';
 var app = express();
 
 import path from 'path';
@@ -42,7 +42,7 @@ app.post('/sendToClaude', async (req, res) => {
     {% extends "govuk/template.njk" %}
 
     {% block head %}
-      <link href="assets/style.css" rel="stylesheet">
+      <link href="/assets/style.css" rel="stylesheet">
     {% endblock %}
 
     {% block header %}
@@ -127,16 +127,16 @@ app.post('/sendToClaude', async (req, res) => {
     const result = message.content[1].input;
     console.log(result);
 
-    const filename = `${Date.now()}.html`;
+    const dirname = `${Date.now()}`;
 
-    fs.writeFile('app/views/' + filename, htmlSkeleton(JSON.stringify(result, null, 2)), (err) => {
+    fse.outputFile('app/views/examples/' + dirname + '/json.html', htmlSkeleton(JSON.stringify(result, null, 2)), (err) => {
       if (err) {
         console.error('Error writing file:', err);
       }
     });
 
     const responseObj = {
-      filename: filename,
+      filename: 'examples/' + dirname + '/json.html',
       result: result,
       resultJSON: JSON.stringify(result, null, 2)
     };
@@ -162,10 +162,11 @@ app.get('/', (req, res) => {
   res.render('index.html', {})
 })
 
-/* Render other pages */
-app.get('/:page', (req, res) => {
-  res.render(req.params.page)
+/* Render example pages */
+app.get('/examples/:dir/:page', (req, res) => {
+  res.render('examples/' + req.params.dir + '/' + req.params.page)
 })
+
 
 app.listen(port, () => {
 	console.log('Server running at http://localhost:3000');
