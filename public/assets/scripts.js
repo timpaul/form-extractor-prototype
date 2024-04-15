@@ -8,6 +8,7 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
   // Trigger the loading spinner
   document.getElementById('jsonTabIframe').src = 'loading.html';
   document.getElementById('listTabIframe').src = 'loading.html';
+  document.getElementById('formTabIframe').src = 'loading.html';
 
   // Send the image to Claude
   fetch('/sendToClaude', { 
@@ -26,6 +27,7 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
   .then(data => {
     document.getElementById('jsonTabIframe').src = data.jsonFilename;
     document.getElementById('listTabIframe').src = data.listFilename;
+    document.getElementById('formTabIframe').src = data.formFilename;
   })
   .catch((error) => {
     console.error('Fetch Error:', error);

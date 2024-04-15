@@ -1,0 +1,45 @@
+{% extends "govuk/template.njk" %}
+
+{% block head %}
+  <link href="/assets/style.css" rel="stylesheet">
+{% endblock %}
+
+{% block beforeContent %}
+  {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+  {% from "govuk/components/button/macro.njk" import govukButton %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: question | float + -1
+  }) }}
+  
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+  
+      <span class="govuk-caption-m">Question {{question}}</span>
+      <h1 class="govuk-heading-l">
+        {{resultJSON.pages[question | float - 1].question_text}}
+      </h1>
+
+      <p class="govuk-body">{{resultJSON.pages[question | float - 1].hint_text}}</p>
+
+  {{ govukButton({
+      text: "Continue",
+      href: question | float + 1
+  }) }}
+
+  </div>
+</div>
+{% endblock %}
+
+
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script src="/assets/all.js"></script>
+  <script src="/assets/scripts.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+{% endblock %}

@@ -53,10 +53,19 @@ app.post('/sendToClaude', async (req, res) => {
     {% set resultJSON = ${content} %}
   `;
 
+  // Create a HTML wrapper for the Form result to go in
+  const formWrapper = (content) => `
+    {% extends "form.njk" %}
+    {% set resultJSON = ${content} %}
+  `;
+
   // Call Claude!
+
   try {
+
     const message = await anthropic.beta.tools.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
+      temperature: 0.0, // Low temp keeps the results more consistent
       max_tokens: 2048,
       tools: [
             {
@@ -115,8 +124,94 @@ app.post('/sendToClaude', async (req, res) => {
             }
           ]
     });
+  
 
     const result = message.content[1].input;
+
+/*
+    const result = {
+  "pages": [
+    {
+      "id": 1,
+      "question_text": "Do you have a National Insurance number?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 2,
+      "question_text": "Your title",
+      "answer_type": "text",
+      "hint_text": "For example Mrs, Miss, Ms, Mr or Dr"
+    },
+    {
+      "id": 3,
+      "question_text": "Your last name or family name",
+      "answer_type": "name",
+      "hint_text": null
+    },
+    {
+      "id": 4,
+      "question_text": "Your first name and any middle names",
+      "answer_type": "name",
+      "hint_text": null
+    },
+    {
+      "id": 5,
+      "question_text": "Have you ever been known by any other last names or family names including your maiden name?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 6,
+      "question_text": "Your date of birth",
+      "answer_type": "date",
+      "hint_text": null
+    },
+    {
+      "id": 7,
+      "question_text": "Your address",
+      "answer_type": "address",
+      "hint_text": null
+    },
+    {
+      "id": 8,
+      "question_text": "Have you lived at this address for more than 12 months?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 9,
+      "question_text": "Tell us your last address",
+      "answer_type": "address",
+      "hint_text": null
+    },
+    {
+      "id": 10,
+      "question_text": "Your mobile number or landline if you do not have a mobile",
+      "answer_type": "phone_number",
+      "hint_text": "We may contact you about your claim. Our number may not show up if we call you."
+    },
+    {
+      "id": 11,
+      "question_text": "What is your nationality?",
+      "answer_type": "text",
+      "hint_text": "This is shown on your passport if you have one, for example, British, Irish, French, Polish."
+    },
+    {
+      "id": 12,
+      "question_text": "Have you claimed Child Benefit for any children before?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 13,
+      "question_text": "Are you currently entitled to or receiving Child Benefit?",
+      "answer_type": "selection",
+      "hint_text": null
+    }
+  ]
+};
+*/
     console.log(result);
 
 
@@ -138,9 +233,17 @@ app.post('/sendToClaude', async (req, res) => {
       }
     });
 
+    // Write the Form file
+    fse.outputFile('app/views/results/' + dirname + '/form.html', formWrapper(JSON.stringify(result, null, 2)), (err) => {
+      if (err) {
+        console.error('Error writing Form file:', err);
+      }
+    });
+
     const responseObj = {
       jsonFilename: 'results/' + dirname + '/json.html',
-      listFilename: 'results/' + dirname + '/list.html'
+      listFilename: 'results/' + dirname + '/list.html',
+      formFilename: 'results/' + dirname + '/form/1'
     };
 
     res.json(responseObj);
@@ -166,6 +269,11 @@ app.get('/', (req, res) => {
 /* Render loading page */
 app.get('/loading.html', (req, res) => {
   res.render('loading.html', {})
+})
+
+/* Render form pages */
+app.get('/results/:dir/form/:question', (req, res) => {
+  res.render('results/' + req.params.dir + '/form.html', {question: req.params.question})
 })
 
 /* Render results pages */

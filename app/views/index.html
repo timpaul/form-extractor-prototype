@@ -45,7 +45,7 @@
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">What is this?</h3>
           <p class="govuk-body govuk-!-margin-bottom-0">
             This tool extracts the structure from an image of a form, then creates a JSON representation that follows the schema used by GOV.UK Forms.
-            Try it with this <a href="https://raw.githubusercontent.com/timpaul/form-converter/main/assets/CH2_English_online.jpg">example form image</a>.
+            Try it with this <a href="https://raw.githubusercontent.com/timpaul/form-extractor-prototype/main/assets/example-form/CH2_English_online-1.jpg">example form image</a>.
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@
 <iframe class="extracted-form" id="jsonTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
 {% endset -%}
 {% set formHtml %}
-
+<iframe class="extracted-form" id="formTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
 {% endset -%}
 
 {{ govukTabs({
