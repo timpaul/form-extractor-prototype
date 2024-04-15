@@ -25,3 +25,26 @@ It'll be available at http://localhost:3000/
 - it can only process images of forms, not documents
 - it only extracts the question title, hint and type
 - you can't provide your own API key via the UI
+
+## How it works
+
+*Disclaimer: This is a prototype and I am not a developer ;-).*
+
+The main UI is in `app/views/index.html`.
+
+Additional CSS styles are in `public/assets/style.css`
+
+The form in `index.html` is intercepted by the script in `public/assets/scripts.js`.
+
+It sends the image at the URL provided by the user to the Claude API.
+
+It does this via the 'SendToClaude' function in `server.js`.
+
+The function makes use of the 'tools' feature of Claude.
+
+That allows you to specify a JSON schema that you'd like it's response to conform to.
+
+The results are saved as files in subfolders in `app/views/examples`.
+
+Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
+
