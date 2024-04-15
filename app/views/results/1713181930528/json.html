@@ -1,0 +1,85 @@
+
+    {% extends "json.njk" %}
+    {% block result %}{
+  "pages": [
+    {
+      "id": 1,
+      "question_text": "Do you have a National Insurance number?",
+      "answer_type": "selection",
+      "hint_text": "Read page 3 of the CH2 Notes."
+    },
+    {
+      "id": 2,
+      "question_text": "Your title",
+      "answer_type": "text",
+      "hint_text": "For example: Mrs, Miss, Ms, Mr or Dr"
+    },
+    {
+      "id": 3,
+      "question_text": "Your last name or family name",
+      "answer_type": "name",
+      "hint_text": null
+    },
+    {
+      "id": 4,
+      "question_text": "Your first name and any middle names",
+      "answer_type": "name",
+      "hint_text": "First name(s)\nMiddle name(s)"
+    },
+    {
+      "id": 5,
+      "question_text": "Have you ever been known by any other last names or family names including your maiden name?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 6,
+      "question_text": "Your date of birth",
+      "answer_type": "date",
+      "hint_text": null
+    },
+    {
+      "id": 7,
+      "question_text": "Your address",
+      "answer_type": "address",
+      "hint_text": null
+    },
+    {
+      "id": 8,
+      "question_text": "Have you lived at this address for more than 12 months?",
+      "answer_type": "selection",
+      "hint_text": null
+    },
+    {
+      "id": 9,
+      "question_text": "Tell us your last address",
+      "answer_type": "address",
+      "hint_text": null
+    },
+    {
+      "id": 10,
+      "question_text": "Your mobile number or landline if you do not have a mobile",
+      "answer_type": "phone_number",
+      "hint_text": "We may contact you about your claim. Our number may not show up if we call you."
+    },
+    {
+      "id": 11,
+      "question_text": "What is your nationality?",
+      "answer_type": "text",
+      "hint_text": "This is shown on your passport if you have one, for example: British, Irish, French, Polish."
+    },
+    {
+      "id": 12,
+      "question_text": "Have you claimed Child Benefit for any children before?",
+      "answer_type": "selection",
+      "hint_text": "If Yes, go to question 13"
+    },
+    {
+      "id": 13,
+      "question_text": "Are you currently entitled to or receiving Child Benefit?",
+      "answer_type": "selection",
+      "hint_text": "If No, go to question 14\nIf Yes, tell us the full name and date of birth of the eldest child you're entitled to or currently receiving Child Benefit for, then go to question 14"
+    }
+  ]
+}{% endblock %}
+  

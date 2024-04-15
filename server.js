@@ -31,37 +31,41 @@ app.use(express.static('public'));
 // CALL CLAUDE
 
 app.post('/sendToClaude', async (req, res) => {
-  const anthropic = new Anthropic(); // get API Key from environment variable ANTHROPIC_API_KEY
-  const image_url = req.body.imageURL; // use the form image hosted on GitHub
+
+  // get API Key from environment variable ANTHROPIC_API_KEY
+  const anthropic = new Anthropic();
+
+  // Encode the image data into base64  
+  const image_url = req.body.imageURL;
   const image_media_type = "image/jpeg"
   const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
   const image_data = Buffer.from(image_array_buffer).toString('base64');
 
-  
-  const htmlSkeleton = (content) => `
-    {% extends "govuk/template.njk" %}
+  // Create a HTML wrapper for the JSON result to go in
+  const jsonWrapper = (content) => `
+    {% extends "json.njk" %}
+    {% block result %}${content}{% endblock %}
+  `;
 
-    {% block head %}
-      <link href="/assets/style.css" rel="stylesheet">
-    {% endblock %}
-
-    {% block header %}
-    {% endblock %}
-
+  // Create a HTML wrapper for the Table result to go in
+  const tableWrapper = (content) => `
+    {% extends "table.njk" %}
     {% block content %}
-      <pre style="overflow: hidden; margin: -20px -15px; padding: 20px 15px;">${content}</pre>
-    {% endblock %}
-
-    {% block footer %}
-    {% endblock %}
-
-    {% block bodyEnd %}
-      {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-      <script src="/govuk-frontend/all.js"></script>
-      <script src="/assets/scripts.js"></script>
-      <script>window.GOVUKFrontend.initAll()</script>
+      {% set resultJSON = ${content} %}
+      <div class="questions">
+        {% for question in resultJSON.pages %}
+        <div class="question">
+          <span class="govuk-caption-m">Question {{question.id}}</span>
+          <h3 class="govuk-heading-s">{{question.question_text}}</h3>
+          <p class="govuk-body-s">Hint: {{question.hint_text}}</p>
+          <p class="govuk-body-s">Type: {{question.answer_type}}</p>
+        </div>
+        {% endfor %}
+      </div>
     {% endblock %}
   `;
+
+  // Call Claude!
   try {
     const message = await anthropic.beta.tools.messages.create({
       model: 'claude-3-opus-20240229',
@@ -127,22 +131,31 @@ app.post('/sendToClaude', async (req, res) => {
     const result = message.content[1].input;
     console.log(result);
 
+
+    // Write the results into a 'results' folder
+
     const dirname = `${Date.now()}`;
 
-    fse.outputFile('app/views/examples/' + dirname + '/json.html', htmlSkeleton(JSON.stringify(result, null, 2)), (err) => {
+    // Write the JSON file
+    fse.outputFile('app/views/results/' + dirname + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)), (err) => {
       if (err) {
-        console.error('Error writing file:', err);
+        console.error('Error writing JSON file:', err);
+      }
+    });
+
+    // Write the table file
+    fse.outputFile('app/views/results/' + dirname + '/table.html', tableWrapper(JSON.stringify(result, null, 2)), (err) => {
+      if (err) {
+        console.error('Error writing Table file:', err);
       }
     });
 
     const responseObj = {
-      filename: 'examples/' + dirname + '/json.html',
-      result: result,
-      resultJSON: JSON.stringify(result, null, 2)
+      jsonFilename: 'results/' + dirname + '/json.html',
+      tableFilename: 'results/' + dirname + '/table.html'
     };
 
     res.json(responseObj);
-
 
   } catch(error) {
     console.error('Error in Claude API call:', error);
@@ -167,9 +180,9 @@ app.get('/loading.html', (req, res) => {
   res.render('loading.html', {})
 })
 
-/* Render example pages */
-app.get('/examples/:dir/:page', (req, res) => {
-  res.render('examples/' + req.params.dir + '/' + req.params.page)
+/* Render results pages */
+app.get('/results/:dir/:page', (req, res) => {
+  res.render('results/' + req.params.dir + '/' + req.params.page)
 })
 
 

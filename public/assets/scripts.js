@@ -3,10 +3,13 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
 
   const imageURL = document.getElementById('imageURL').value;
   
-  document.getElementById('extractedWindow').src = 'loading.html';
   document.getElementById('formImage').src = imageURL;
 
+  // Trigger the loading spinner
+  document.getElementById('jsonTabIframe').src = 'loading.html';
+  document.getElementById('tableTabIframe').src = 'loading.html';
 
+  // Send the image to Claude
   fetch('/sendToClaude', { 
     method: 'POST',
     headers: {
@@ -21,9 +24,8 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
     return response.json();
   })
   .then(data => {
-    console.log(data);
-    document.getElementById('extractedWindow').scrolling = "auto";
-    document.getElementById('extractedWindow').src = data.filename;
+    document.getElementById('jsonTabIframe').src = data.jsonFilename;
+    document.getElementById('tableTabIframe').src = data.tableFilename;
   })
   .catch((error) => {
     console.error('Fetch Error:', error);

@@ -71,8 +71,13 @@
 
 
 
-{% set jsonHtml %}<iframe class="extracted-form" id="extractedWindow" src="" width="100%" height="600px" scrolling="yes"></iframe>{% endset -%}
-{% set questionHtml %}
+{% set jsonHtml %}
+<iframe class="extracted-form" id="jsonTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
+{% endset -%}
+{% set tableHtml %}
+<iframe class="extracted-form" id="tableTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
+{% endset -%}
+{% set formHtml %}
 
 {% endset -%}
 
@@ -80,16 +85,23 @@
   items: [
     {
       label: "JSON",
-      id: "tab1",
+      id: "json",
       panel: {
         html: jsonHtml
       }
     },
     {
-      label: "Questions",
-      id: "tab2",
+      label: "Table",
+      id: "table",
       panel: {
-        html: questionHtml
+        html: tableHtml
+      }
+    },
+    {
+      label: "Form",
+      id: "form",
+      panel: {
+        html: formHtml
       }
     }
   ]
