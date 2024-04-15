@@ -14,9 +14,9 @@ You'll need an [Anthropic API key](https://www.anthropic.com/api).
 
 Add the key as a local environment variable called ANTHROPIC_API_KEY.
 
-Install the app locally with 'npm install'.
+Install the app locally with `npm install`.
 
-Start the app with 'npm start'.
+Start the app with `npm start`.
 
 It'll be available at http://localhost:3000/
 
