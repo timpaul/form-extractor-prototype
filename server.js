@@ -50,19 +50,7 @@ app.post('/sendToClaude', async (req, res) => {
   // Create a HTML wrapper for the List result to go in
   const listWrapper = (content) => `
     {% extends "list.njk" %}
-    {% block content %}
-      {% set resultJSON = ${content} %}
-      <div class="questions">
-        {% for question in resultJSON.pages %}
-        <div class="question">
-          <span class="govuk-caption-m">Question {{question.id}}</span>
-          <h3 class="govuk-heading-s">{{question.question_text}}</h3>
-          <p class="govuk-body-s">Hint: {{question.hint_text}}</p>
-          <p class="govuk-body-s">Type: {{question.answer_type}}</p>
-        </div>
-        {% endfor %}
-      </div>
-    {% endblock %}
+    {% set resultJSON = ${content} %}
   `;
 
   // Call Claude!

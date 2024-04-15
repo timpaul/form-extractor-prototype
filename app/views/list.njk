@@ -8,6 +8,18 @@
 {% endblock %}
 
 {% block content %}
+
+  <div class="questions">
+    {% for question in resultJSON.pages %}
+    <div class="question">
+      <span class="govuk-caption-m">Question {{question.id}}</span>
+      <h3 class="govuk-heading-m">{{question.question_text}}</h3>
+      <p class="govuk-body">Hint: {{question.hint_text}}</p>
+      <p class="govuk-body">Type: {{question.answer_type}}</p>
+    </div>
+    {% endfor %}
+  </div>
+
 {% endblock %}
 
 {% block footer %}
