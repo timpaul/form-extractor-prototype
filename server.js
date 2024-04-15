@@ -47,9 +47,9 @@ app.post('/sendToClaude', async (req, res) => {
     {% block result %}${content}{% endblock %}
   `;
 
-  // Create a HTML wrapper for the Table result to go in
-  const tableWrapper = (content) => `
-    {% extends "table.njk" %}
+  // Create a HTML wrapper for the List result to go in
+  const listWrapper = (content) => `
+    {% extends "list.njk" %}
     {% block content %}
       {% set resultJSON = ${content} %}
       <div class="questions">
@@ -143,16 +143,16 @@ app.post('/sendToClaude', async (req, res) => {
       }
     });
 
-    // Write the table file
-    fse.outputFile('app/views/results/' + dirname + '/table.html', tableWrapper(JSON.stringify(result, null, 2)), (err) => {
+    // Write the List file
+    fse.outputFile('app/views/results/' + dirname + '/list.html', listWrapper(JSON.stringify(result, null, 2)), (err) => {
       if (err) {
-        console.error('Error writing Table file:', err);
+        console.error('Error writing List file:', err);
       }
     });
 
     const responseObj = {
       jsonFilename: 'results/' + dirname + '/json.html',
-      tableFilename: 'results/' + dirname + '/table.html'
+      listFilename: 'results/' + dirname + '/list.html'
     };
 
     res.json(responseObj);

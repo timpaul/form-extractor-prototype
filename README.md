@@ -25,6 +25,7 @@ It'll be available at http://localhost:3000/
 - it can only process images of forms, not documents
 - it only extracts the question title, hint and type
 - you can't provide your own API key via the UI
+- you can't browse the folder of previous results
 
 ## How it works
 
