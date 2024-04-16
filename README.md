@@ -23,9 +23,9 @@ It'll be available at http://localhost:3000/
 ## Current limitations
 
 - it can only process images of forms, not documents
-- it only extracts the question title, hint and type
+- it only knows about certain kinds of question types
 - you can't provide your own API key via the UI
-- you can't browse the folder of previous results
+- you can't browse previous form extractions
 
 ## How it works
 
@@ -48,4 +48,10 @@ That allows you to specify a JSON schema that you'd like it's response to confor
 The results are saved as files in subfolders in `app/views/results`.
 
 Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
+
+## Do do
+
+- switch from saving files to better use of routes
+- let users add an API key via the UI, so I can host the app somewhere
+- add more question types - eg. radio and checkbox lists
 
