@@ -26,6 +26,7 @@ It'll be available at http://localhost:3000/
 - it only knows about certain kinds of question types
 - you can't provide your own API key via the UI
 - you can't browse previous form extractions
+- like a lot of Gen AI, it can be unpredictable
 
 ## How it works
 
