@@ -8087,8 +8087,13 @@ pre {
   width: calc(100% + 40px);*/
 }
 
-#json, #list, #form{
+#json, #list{
   padding: 0;
 }
+
+#form{
+  padding: 5px 0 1px 5px;
+}
+
 
 /*# sourceMappingURL=style.css.map */

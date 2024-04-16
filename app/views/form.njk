@@ -4,6 +4,12 @@
   <link href="/assets/style.css" rel="stylesheet">
 {% endblock %}
 
+{% block header %}
+  {{ govukHeader({
+    useTudorCrown: true
+  }) }}
+{% endblock %}
+
 {% block beforeContent %}
   {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
   {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -12,7 +18,7 @@
     text: "Back",
     href: question | float + -1
   }) }}
-  
+
 {% endblock %}
 
 {% block content %}
