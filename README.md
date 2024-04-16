@@ -4,9 +4,9 @@ This tool extracts the structure from an image of a form.
 
 It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
 
-Right now it generates the structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
+It generates the structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
-But I'm hoping to get it generating actual multi-page web forms in the GOV.UK style.
+It then uses that to generate a multi-page web form in the GOV.Uk style.
 
 ## Run locally
 
