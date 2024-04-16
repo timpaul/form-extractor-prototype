@@ -45,7 +45,7 @@ The function makes use of the 'tools' feature of Claude.
 
 That allows you to specify a JSON schema that you'd like it's response to conform to.
 
-The results are saved as files in subfolders in `app/views/examples`.
+The results are saved as files in subfolders in `app/views/results`.
 
 Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
 
