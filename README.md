@@ -4,7 +4,7 @@ This tool extracts the structure from an image of a form.
 
 It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
 
-It generates the structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
+It replicates the form structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
 It then uses that to generate a multi-page web form in the GOV.Uk style.
 
