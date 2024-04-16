@@ -95,8 +95,18 @@ app.post('/sendToClaude', async (req, res) => {
                               "answer_type": {
                                   "type": "string",
                                   "description": "The type of form fields associated with the question",
-                                  "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text"]
-                              }                        
+                                  "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text", "yes_no_question"]
+                              },  
+                              "answer_settings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "input_type": {
+                                      "type": "string",
+                                      "description": "The specific form field type for this question",
+                                      "enum": ["date_of_birth", "other_date", "full_name", "uk_address", "international_address"]
+                                    }
+                                  }
+                              }                      
                             }
                           }
                       }
@@ -133,80 +143,20 @@ app.post('/sendToClaude', async (req, res) => {
   "pages": [
     {
       "id": 1,
-      "question_text": "Do you have a National Insurance number?",
-      "answer_type": "selection",
+      "question_text": "What is your name?",
+      "answer_type": "name",
       "hint_text": null
     },
     {
       "id": 2,
-      "question_text": "Your title",
-      "answer_type": "text",
-      "hint_text": "For example Mrs, Miss, Ms, Mr or Dr"
+      "question_text": "What is your date of birth?",
+      "answer_type": "date",
+      "hint_text": "For example 3 6 1976"
     },
     {
       "id": 3,
-      "question_text": "Your last name or family name",
-      "answer_type": "name",
-      "hint_text": null
-    },
-    {
-      "id": 4,
-      "question_text": "Your first name and any middle names",
-      "answer_type": "name",
-      "hint_text": null
-    },
-    {
-      "id": 5,
-      "question_text": "Have you ever been known by any other last names or family names including your maiden name?",
-      "answer_type": "selection",
-      "hint_text": null
-    },
-    {
-      "id": 6,
-      "question_text": "Your date of birth",
-      "answer_type": "date",
-      "hint_text": null
-    },
-    {
-      "id": 7,
-      "question_text": "Your address",
-      "answer_type": "address",
-      "hint_text": null
-    },
-    {
-      "id": 8,
-      "question_text": "Have you lived at this address for more than 12 months?",
-      "answer_type": "selection",
-      "hint_text": null
-    },
-    {
-      "id": 9,
-      "question_text": "Tell us your last address",
-      "answer_type": "address",
-      "hint_text": null
-    },
-    {
-      "id": 10,
-      "question_text": "Your mobile number or landline if you do not have a mobile",
-      "answer_type": "phone_number",
-      "hint_text": "We may contact you about your claim. Our number may not show up if we call you."
-    },
-    {
-      "id": 11,
-      "question_text": "What is your nationality?",
-      "answer_type": "text",
-      "hint_text": "This is shown on your passport if you have one, for example, British, Irish, French, Polish."
-    },
-    {
-      "id": 12,
-      "question_text": "Have you claimed Child Benefit for any children before?",
-      "answer_type": "selection",
-      "hint_text": null
-    },
-    {
-      "id": 13,
-      "question_text": "Are you currently entitled to or receiving Child Benefit?",
-      "answer_type": "selection",
+      "question_text": "Are you a UK resident?",
+      "answer_type": "yes_no_question",
       "hint_text": null
     }
   ]

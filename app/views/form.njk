@@ -1,4 +1,8 @@
 {% extends "govuk/template.njk" %}
+{% import "answer-types.njk" as answerType %}
+
+
+{% set currentPageJSON = resultJSON.pages[question | float - 1] %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -16,7 +20,7 @@
 
   {{ govukBackLink({
     text: "Back",
-    href: question | float + -1
+    href: question | float -1
   }) }}
 
 {% endblock %}
@@ -26,11 +30,51 @@
     <div class="govuk-grid-column-two-thirds">
   
       <span class="govuk-caption-m">Question {{question}}</span>
-      <h1 class="govuk-heading-l">
-        {{resultJSON.pages[question | float - 1].question_text}}
-      </h1>
 
-      <p class="govuk-body">{{resultJSON.pages[question | float - 1].hint_text}}</p>
+      
+      {% if currentPageJSON.answer_type == "date" %}
+        {{ answerType.other_date(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "name" %}
+        {{ answerType.name(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "number" %}
+        {{ answerType.number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "email" %}
+        {{ answerType.email(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "text" %}
+        {{ answerType.text(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "national_insurance_number" %}
+        {{ answerType.national_insurance_number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "phone_number" %}
+        {{ answerType.phone_number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "organisation_name" %}
+        {{ answerType.organisation_name(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "address" %}
+        {{ answerType.address(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "yes_no_question" %}
+        {{ answerType.yes_no(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "selection" %}
+        <h1 class="govuk-heading-l">
+          {{currentPageJSON.question_text}}
+        </h1>
+        <p class="govuk-body">{{currentPageJSON.hint_text}}</p>
+
+      {% else %}
+        <h1 class="govuk-heading-l">
+          {{currentPageJSON.question_text}}
+        </h1>
+        <p class="govuk-body">{{currentPageJSON.hint_text}}</p>
+      {% endif %}
+
 
   {{ govukButton({
       text: "Continue",
