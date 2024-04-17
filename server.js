@@ -6,7 +6,6 @@ import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
-import sass from 'sass';
 var app = express();
 
 import path from 'path';
