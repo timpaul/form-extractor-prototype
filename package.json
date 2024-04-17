@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "scss": "sass --watch assets/style.scss public/assets/style.css"
+    "dev": "node --watch server",
+    "scss": "sass --watch assets/style.scss public/assets/style.css",
+    "start": "node server"
   },
   "repository": {
     "type": "git"
