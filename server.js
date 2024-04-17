@@ -1,11 +1,12 @@
 import 'dotenv/config'
 
+import fs from "fs";
+
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
 import sass from 'sass';
-import fse from 'fs-extra';
 var app = express();
 
 import path from 'path';
@@ -140,57 +141,21 @@ app.post('/sendToClaude', async (req, res) => {
 
     const result = message.content[1].input;
 
-/*
-    const result = {
-  "pages": [
-    {
-      "id": 1,
-      "question_text": "What is your name?",
-      "answer_type": "name",
-      "hint_text": null
-    },
-    {
-      "id": 2,
-      "question_text": "What is your date of birth?",
-      "answer_type": "date",
-      "hint_text": "For example 3 6 1976"
-    },
-    {
-      "id": 3,
-      "question_text": "Are you a UK resident?",
-      "answer_type": "yes_no_question",
-      "hint_text": null
-    }
-  ]
-};
-*/
-    console.log(result);
-
-
     // Write the results into a 'results' folder
 
     const dirname = `${Date.now()}`;
+    const viewPath = 'app/views/results/' + dirname;
 
-    // Write the JSON file
-    fse.outputFile('app/views/results/' + dirname + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing JSON file:', err);
-      }
-    });
+    fs.mkdirSync(viewPath, { recursive: true });
 
-    // Write the List file
-    fse.outputFile('app/views/results/' + dirname + '/list.html', listWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing List file:', err);
-      }
-    });
-
-    // Write the Form file
-    fse.outputFile('app/views/results/' + dirname + '/form.html', formWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing Form file:', err);
-      }
-    });
+    // Write the files
+    try {
+      fs.writeFileSync(viewPath + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)));
+      fs.writeFileSync(viewPath + '/list.html', listWrapper(JSON.stringify(result, null, 2)));
+      fs.writeFileSync(viewPath + '/form.html', formWrapper(JSON.stringify(result, null, 2)));
+    } catch (err) {
+      console.error(err);
+    }
 
     const responseObj = {
       jsonFilename: 'results/' + dirname + '/json.html',
