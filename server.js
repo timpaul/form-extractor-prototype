@@ -1,15 +1,22 @@
+import 'dotenv/config'
+
+import fs from "fs";
+
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
-import sass from 'sass';
-import fse from 'fs-extra';
 var app = express();
 
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
+
+import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
+
+// get API Key from environment variable ANTHROPIC_API_KEY
+const anthropic = new Anthropic();
 
 app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets')))
 
@@ -31,9 +38,6 @@ app.use(express.static('public'));
 // CALL CLAUDE
 
 app.post('/sendToClaude', async (req, res) => {
-
-  // get API Key from environment variable ANTHROPIC_API_KEY
-  const anthropic = new Anthropic();
 
   // Encode the image data into base64  
   const image_url = req.body.imageURL;
@@ -67,128 +71,44 @@ app.post('/sendToClaude', async (req, res) => {
       model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
       temperature: 0.0, // Low temp keeps the results more consistent
       max_tokens: 2048,
-      tools: [
+      tools: [ extractFormQuestions ],
+      messages: [{
+        "role": "user",
+        "content": [
             {
-                "name": "extract_form_questions",
-                "description": "Extract the questions from an image of a form.",
-                "input_schema": {
-                  "type": "object",
-                  "properties": {
-                      "pages": {
-                          "type": "array",
-                          "description": "An array of the questions in the form",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                  "type": "number",
-                                  "description": "The number of the question"
-                              },
-                              "question_text": {
-                                  "type": "string",
-                                  "description": "The title of the question"
-                              },
-                              "hint_text": {
-                                  "type": "string",
-                                  "description": "Any hint text associated with the question. It usually appears just below the question title. Use 'null' if there is no hint text"
-                              },
-                              "answer_type": {
-                                  "type": "string",
-                                  "description": "The type of form fields associated with the question",
-                                  "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text", "yes_no_question"]
-                              },  
-                              "answer_settings": {
-                                  "type": "object",
-                                  "properties": {
-                                    "input_type": {
-                                      "type": "string",
-                                      "description": "The specific form field type for this question",
-                                      "enum": ["date_of_birth", "other_date", "full_name", "uk_address", "international_address"]
-                                    }
-                                  }
-                              }                      
-                            }
-                          }
-                      }
-                    }
-                }
-            }
-          ],
-      messages: [
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": image_media_type,
+                    "data": image_data,
+                },
+            },
             {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": image_media_type,
-                            "data": image_data,
-                        },
-                    },
-                    {
-                        "type": "text",
-                        "text": 'Extract the questions from this form? Use the extract_form_questions tool'
-                    }
-                ],
+                "type": "text",
+                "text": 'Extract the questions from this form? Use the extract_form_questions tool'
             }
-          ]
+        ],
+      }]
     });
   
 
     const result = message.content[1].input;
 
-/*
-    const result = {
-  "pages": [
-    {
-      "id": 1,
-      "question_text": "What is your name?",
-      "answer_type": "name",
-      "hint_text": null
-    },
-    {
-      "id": 2,
-      "question_text": "What is your date of birth?",
-      "answer_type": "date",
-      "hint_text": "For example 3 6 1976"
-    },
-    {
-      "id": 3,
-      "question_text": "Are you a UK resident?",
-      "answer_type": "yes_no_question",
-      "hint_text": null
-    }
-  ]
-};
-*/
-    console.log(result);
-
-
     // Write the results into a 'results' folder
 
     const dirname = `${Date.now()}`;
+    const viewPath = 'app/views/results/' + dirname;
 
-    // Write the JSON file
-    fse.outputFile('app/views/results/' + dirname + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing JSON file:', err);
-      }
-    });
+    fs.mkdirSync(viewPath, { recursive: true });
 
-    // Write the List file
-    fse.outputFile('app/views/results/' + dirname + '/list.html', listWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing List file:', err);
-      }
-    });
-
-    // Write the Form file
-    fse.outputFile('app/views/results/' + dirname + '/form.html', formWrapper(JSON.stringify(result, null, 2)), (err) => {
-      if (err) {
-        console.error('Error writing Form file:', err);
-      }
-    });
+    // Write the files
+    try {
+      fs.writeFileSync(viewPath + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)));
+      fs.writeFileSync(viewPath + '/list.html', listWrapper(JSON.stringify(result, null, 2)));
+      fs.writeFileSync(viewPath + '/form.html', formWrapper(JSON.stringify(result, null, 2)));
+    } catch (err) {
+      console.error(err);
+    }
 
     const responseObj = {
       jsonFilename: 'results/' + dirname + '/json.html',
