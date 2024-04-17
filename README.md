@@ -4,6 +4,8 @@ This tool extracts the structure from an image of a form.
 
 It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
 
+A single extraction of an A4 form costs about 10p.
+
 It replicates the form structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
 It then uses that to generate a multi-page web form in the GOV.UK style.
