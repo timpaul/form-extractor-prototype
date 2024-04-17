@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
