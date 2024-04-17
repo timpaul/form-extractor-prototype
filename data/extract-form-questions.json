@@ -1,0 +1,45 @@
+{
+    "name": "extract_form_questions",
+    "description": "Extract the questions from an image of a form.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+          "pages": {
+              "type": "array",
+              "description": "An array of the questions in the form",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                      "type": "number",
+                      "description": "The number of the question"
+                  },
+                  "question_text": {
+                      "type": "string",
+                      "description": "The title of the question"
+                  },
+                  "hint_text": {
+                      "type": "string",
+                      "description": "Any hint text associated with the question. It usually appears just below the question title. Use 'null' if there is no hint text"
+                  },
+                  "answer_type": {
+                      "type": "string",
+                      "description": "The type of form fields associated with the question",
+                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text", "yes_no_question"]
+                  },  
+                  "answer_settings": {
+                      "type": "object",
+                      "properties": {
+                        "input_type": {
+                          "type": "string",
+                          "description": "The specific form field type for this question",
+                          "enum": ["date_of_birth", "other_date", "full_name", "uk_address", "international_address"]
+                        }
+                      }
+                  }                      
+                }
+              }
+          }
+        }
+    }
+}
