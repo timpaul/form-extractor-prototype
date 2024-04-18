@@ -52,7 +52,7 @@ The results are saved as files in subfolders in `app/views/results`.
 
 Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
 
-## Do do
+## To do
 
 - switch from saving files to better use of routes
 - let users add an API key via the UI, so I can host the app somewhere
