@@ -1,8 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% import "answer-types.njk" as answerType %}
 
-
-{% set currentPageJSON = resultJSON.pages[question | float - 1] %}
+{% set currentPageJSON = formData.pages[question-1] %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -20,12 +19,13 @@
 
   {{ govukBackLink({
     text: "Back",
-    href: question | float -1
+    href: question-1
   }) }}
 
 {% endblock %}
 
 {% block content %}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
   
@@ -90,6 +90,5 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="/assets/all.js"></script>
-  <script src="/assets/scripts.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}

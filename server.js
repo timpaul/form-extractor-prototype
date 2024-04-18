@@ -2,11 +2,19 @@ import 'dotenv/config'
 
 import fs from "fs";
 
+import bodyParser from 'body-parser';
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
+
 var app = express();
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,7 +34,8 @@ nunjucks.configure([
 ],
 {
   autoescape: true,
-  express: app
+  express: app,
+  noCache: true
 })
 
 app.set('view engine', 'html')
@@ -92,31 +101,22 @@ app.post('/sendToClaude', async (req, res) => {
     });
   
 
-    const result = message.content[1].input;
+    let result = message.content[1].input;
+
+    result.imageURL = image_url
 
     // Write the results into a 'results' folder
 
-    const dirname = `${Date.now()}`;
-    const viewPath = 'app/views/results/' + dirname;
-
-    fs.mkdirSync(viewPath, { recursive: true });
+    const now = `${Date.now()}`;
 
     // Write the files
     try {
-      fs.writeFileSync(viewPath + '/json.html', jsonWrapper(JSON.stringify(result, null, 2)));
-      fs.writeFileSync(viewPath + '/list.html', listWrapper(JSON.stringify(result, null, 2)));
-      fs.writeFileSync(viewPath + '/form.html', formWrapper(JSON.stringify(result, null, 2)));
+      fs.writeFileSync('app/data/' + now + '.json', JSON.stringify(result, null, 2));
     } catch (err) {
       console.error(err);
     }
 
-    const responseObj = {
-      jsonFilename: 'results/' + dirname + '/json.html',
-      listFilename: 'results/' + dirname + '/list.html',
-      formFilename: 'results/' + dirname + '/form/1'
-    };
-
-    res.json(responseObj);
+    res.redirect('/results/' + now);
 
   } catch(error) {
     console.error('Error in Claude API call:', error);
@@ -132,25 +132,58 @@ const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
-  //res.render('index.html', {result: result, resultJSON: JSON.stringify(result, null, 2)})
-  res.render('index.html', {})
+  res.render('index.html')
 })
 
 /* Render loading page */
 app.get('/loading.html', (req, res) => {
-  res.render('loading.html', {})
+  res.render('loading.html')
 })
+
+// load form data
+
+function loadFormData(formId){
+  try {
+    return JSON.parse(fs.readFileSync('./app/data/'+formId+'.json'))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 /* Render form pages */
-app.get('/results/:dir/form/:question', (req, res) => {
-  res.render('results/' + req.params.dir + '/form.html', {question: req.params.question})
+app.get('/forms/:formId/:question', (req, res) => {
+  const formId = req.params.formId 
+  const question = Number(req.params.question)
+  const formData = loadFormData(formId)
+  res.locals.formData = formData
+  res.locals.question = question
+  res.render('form.njk');
 })
 
-/* Render results pages */
-app.get('/results/:dir/:page', (req, res) => {
-  res.render('results/' + req.params.dir + '/' + req.params.page)
+/* Render list pages */
+app.get('/lists/:formId', (req, res) => {
+  const formId = req.params.formId 
+  const formData = loadFormData(formId)
+  res.locals.formData = formData
+  res.render('list.njk')
 })
 
+/* Render JSON pages */
+app.get('/json/:formId', (req, res) => {
+  const formId = req.params.formId 
+  let formData = loadFormData(formId)
+  formData = JSON.stringify(formData, null, 2);
+  res.locals.formData = formData
+  res.render('json.njk')
+})
+
+app.get('/results/:formId', (req, res) => {
+  const formId = req.params.formId 
+  const formData = loadFormData(formId)
+  res.locals.formId = formId
+  res.locals.formData = formData
+  res.render('result')
+})
 
 app.listen(port, () => {
 	console.log('Server running at http://localhost:3000');

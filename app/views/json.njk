@@ -9,7 +9,7 @@
 
 {% block content %}
   <pre style="overflow: hidden; margin: -20px -15px; padding: 20px 15px;">
-    {% block result %}{% endblock %}
+    {{ formData }}
   </pre>
 {% endblock %}
 
@@ -19,6 +19,5 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="/assets/all.js"></script>
-  <script src="/assets/scripts.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
