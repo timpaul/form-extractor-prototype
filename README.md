@@ -6,7 +6,7 @@ It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
 
 A single extraction of an A4 form costs about 10p.
 
-It replicates the form structue in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
+It replicates the form structure in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
 It then uses that to generate a multi-page web form in the GOV.UK style.
 
@@ -14,7 +14,7 @@ It then uses that to generate a multi-page web form in the GOV.UK style.
 
 You'll need an [Anthropic API key](https://www.anthropic.com/api).
 
-Add the key as a local environment variable called ANTHROPIC_API_KEY.
+Add the key as a local environment variable called `ANTHROPIC_API_KEY`.
 
 Install the app locally with `npm install`.
 
