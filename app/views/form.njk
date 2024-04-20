@@ -62,11 +62,11 @@
       {% elif currentPageJSON.answer_type == "yes_no_question" %}
         {{ answerType.yes_no(currentPageJSON.question_text, currentPageJSON.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "selection" %}
-        <h1 class="govuk-heading-l">
-          {{currentPageJSON.question_text}}
-        </h1>
-        <p class="govuk-body">{{currentPageJSON.hint_text}}</p>
+      {% elif currentPageJSON.answer_type == "single_choice" %}
+        {{ answerType.single_choice(currentPageJSON.question_text, currentPageJSON.options) }}
+
+      {% elif currentPageJSON.answer_type == "multiple_choice" %}
+        {{ answerType.multiple_choice(currentPageJSON.question_text, currentPageJSON.options) }}
 
       {% else %}
         <h1 class="govuk-heading-l">
