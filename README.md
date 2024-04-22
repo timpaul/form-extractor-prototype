@@ -10,6 +10,11 @@ It replicates the form structure in JSON, following the schema used by [GOV.UK F
 
 It then uses that to generate a multi-page web form in the GOV.UK style.
 
+Here's a short demo video:
+
+https://github.com/timpaul/form-extractor-prototype/assets/1590604/8adea926-808e-4011-80c6-18ce4a549a00
+
+
 ## Run locally
 
 You'll need an [Anthropic API key](https://www.anthropic.com/api).
@@ -51,10 +56,4 @@ That allows you to specify a JSON schema that you'd like it's response to confor
 The results are saved as files in subfolders in `app/views/results`.
 
 Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
-
-## To do
-
-- switch from saving files to better use of routes
-- let users add an API key via the UI, so I can host the app somewhere
-- add more question types - eg. radio and checkbox lists
 
