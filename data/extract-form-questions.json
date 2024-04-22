@@ -24,9 +24,9 @@
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of form fields associated with the question",
-                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "selection", "text", "yes_no_question"]
-                  },  
+                      "description": "The type of form fields associated with the question. Base this strictly on the visual field type, not the question text",
+                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question"]
+                  },
                   "answer_settings": {
                       "type": "object",
                       "properties": {
@@ -36,7 +36,24 @@
                           "enum": ["date_of_birth", "other_date", "full_name", "uk_address", "international_address"]
                         }
                       }
-                  }                      
+                  },
+                  "options": {
+                    "type": "array",
+                    "description": "If the answer_type is single or multiple choice, list only the options you can see here, do not make any up",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "Option"
+                        },
+                        "text": {
+                          "type": "string",
+                          "description": "Option"
+                        }
+                      }
+                    }
+                  }              
                 }
               }
           }

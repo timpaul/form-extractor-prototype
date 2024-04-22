@@ -36,7 +36,6 @@
           }
         }) }}
         {{ govukButton({
-          id: 'submit-url-button',
           text: "Extract form",
           classes: "govuk-!-margin-bottom-0"
         }) }}
@@ -53,6 +52,64 @@
     </form>
   </div>
 
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+
+  <h2 class="govuk-heading-m">Original form</h2>
+
+  <div class="form-image-container">
+    <img id="formImage" class="form-image" src="{{ formData.imageURL }}" />
+  </div>
+
+  </div>
+  <div class="govuk-grid-column-one-half">
+
+  <h2 class="govuk-heading-m">Extracted form</h2>
+
+
+
+
+{% set formHtml %}
+<iframe class="extracted-form" id="formTabIframe" src="/forms/{{ formId }}/1" width="100%" height="595px" scrolling="auto"></iframe>
+{% endset -%}
+{% set listHtml %}
+<iframe class="extracted-form" id="listTabIframe" src="/lists/{{ formId }}" width="100%" height="600px" scrolling="auto"></iframe>
+{% endset -%}
+{% set jsonHtml %}
+<iframe class="extracted-form" id="jsonTabIframe" src="/json/{{ formId }}" width="100%" height="600px" scrolling="auto"></iframe>
+{% endset -%}
+
+{{ govukTabs({
+  items: [
+    {
+      label: "Form",
+      id: "form",
+      panel: {
+        html: formHtml
+      }
+    },
+    {
+      label: "List",
+      id: "list",
+      panel: {
+        html: listHtml
+      }
+    },
+    {
+      label: "JSON",
+      id: "json",
+      panel: {
+        html: jsonHtml
+      }
+    }
+  ]
+}) }}
+
+  
+
+  </div>
 </div>
 
 
@@ -62,6 +119,5 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <!--<script src="/govuk-frontend/all.js"></script>-->
   <script src="/assets/all.js"></script>
-  <script src="/assets/scripts.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}

@@ -10,7 +10,7 @@
 {% block content %}
 
   <div class="questions">
-    {% for question in resultJSON.pages %}
+    {% for question in formData.pages %}
     <div class="question">
       <span class="govuk-caption-m">Question {{question.id}}</span>
       <h3 class="govuk-heading-m">{{question.question_text}}</h3>
@@ -28,6 +28,5 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="/assets/all.js"></script>
-  <script src="/assets/scripts.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
