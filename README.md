@@ -4,7 +4,7 @@ This tool extracts the structure from an image of a form.
 
 It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
 
-A single extraction of an A4 form costs about 10p.
+A single extraction of an A4 form page costs about 10p.
 
 It replicates the form structure in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
@@ -29,7 +29,7 @@ It'll be available at http://localhost:3000/
 
 ## Current limitations
 
-- it can only process images of forms, not documents
+- it can only process jpg images of forms, not documents
 - it only knows about certain kinds of question types
 - you can't provide your own API key via the UI
 - you can't browse previous form extractions
@@ -43,9 +43,9 @@ The main UI is in `app/views/index.html`.
 
 Additional CSS styles are in `public/assets/style.css`
 
-The form in `index.html` is intercepted by the script in `public/assets/scripts.js`.
+The script in `public/assets/scripts.js` handles the image preview and loading spinner.
 
-It sends the image at the URL provided by the user to the Claude API.
+The form in `index.html` sends the image at the URL provided by the user to the Claude API. 
 
 It does this via the 'SendToClaude' function in `server.js`.
 
@@ -53,7 +53,7 @@ The function makes use of the 'tools' feature of Claude.
 
 That allows you to specify a JSON schema that you'd like it's response to conform to.
 
-The results are saved as files in subfolders in `app/views/results`.
+The results are saved as JSON files in `app/data/`.
 
-Those files are then loaded by `scripts.js` into iframes in `app/views/index.html`.
+Those files are used to generate the pages that are loaded into iframes in `app/views/index.html`.
 
