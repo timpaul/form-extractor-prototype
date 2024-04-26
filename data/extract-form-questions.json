@@ -6,25 +6,25 @@
       "properties": {
           "pages": {
               "type": "array",
-              "description": "An array of the questions in the form",
+              "description": "An array of the questions in the form. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes.",
               "items": {
                 "type": "object",
                 "properties": {
                   "id": {
                       "type": "number",
-                      "description": "The number of the question"
+                      "description": "The number of the question. If the questions in the image don't have numbers, number them sequentially, starting at 1."
                   },
                   "question_text": {
                       "type": "string",
-                      "description": "The title of the question"
+                      "description": "The title of the question. Questions titles are often bigger or bolder than the surrounding text."
                   },
                   "hint_text": {
                       "type": "string",
-                      "description": "Any hint text associated with the question. It usually appears just below the question title. Use 'null' if there is no hint text"
+                      "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. Use 'null' if there is no hint text"
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of form fields associated with the question. Base this strictly on the visual field type, not the question text",
+                      "description": "The type of question being asked, based on the fields. If a question contains square boxes, it's probably a multiple_choice question. If it's asking how many of something there is, it's probably a number question.",
                       "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question"]
                   },
                   "answer_settings": {
@@ -39,7 +39,7 @@
                   },
                   "options": {
                     "type": "array",
-                    "description": "If the answer_type is single or multiple choice, list only the options you can see here, do not make any up",
+                    "description": "If the answer_type is single_choice or multiple_choice, list the options here. Only give options that appear in the original image, do not make any up",
                     "items": {
                       "type": "object",
                       "properties": {
