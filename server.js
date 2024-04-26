@@ -94,12 +94,13 @@ app.post('/sendToClaude', async (req, res) => {
             },
             {
                 "type": "text",
-                "text": 'Extract the questions from this form? Use the extract_form_questions tool'
+                "text": "Is this a form? It's only a form if it contains form field boxes. If it is a form, extract the questions from it using the extract_form_questions tool."
             }
         ],
       }]
     });
   
+    console.log(message);
 
     let result = message.content[1].input;
 

@@ -2,32 +2,46 @@
 {% import "answer-types.njk" as answerType %}
 
 {% set currentPageJSON = formData.pages[question-1] %}
+{% set alert = formData.alert %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
 {% endblock %}
 
 {% block header %}
-  {{ govukHeader({
-    useTudorCrown: true
-  }) }}
+  {% if not alert %}
+    {{ govukHeader({
+      useTudorCrown: true
+    }) }}
+  {% endif %}
 {% endblock %}
 
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
 {% block beforeContent %}
-  {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-  {% from "govuk/components/button/macro.njk" import govukButton %}
-
-  {{ govukBackLink({
-    text: "Back",
-    href: question-1
-  }) }}
-
+    {% if not alert %}
+    {{ govukBackLink({
+      text: "Back",
+      href: question-1
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+    {% if alert %}
+      {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+      {{ govukWarningText({
+        text: "This is not a form",
+        iconFallbackText: "Alert"
+      }) }}
+      <p class="govuk-body">{{alert}}</p>
+    {% else %}
   
       <span class="govuk-caption-m">Question {{question}}</span>
 
@@ -81,11 +95,15 @@
       href: question | float + 1
   }) }}
 
+    {% endif %}
+
   </div>
 </div>
 {% endblock %}
 
-
+{% if alert %}
+{% block footer %}{% endblock %}
+{% endif %}
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
