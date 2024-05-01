@@ -39,21 +39,27 @@ It'll be available at http://localhost:3000/
 
 *Disclaimer: This is a prototype and I am not a developer ;-).*
 
-The main UI is in `app/views/index.html`.
+The main UI is in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
 
-Additional CSS styles are in `public/assets/style.css`
+Other Nunjucks page templates and macros are in [app/views](https://github.com/timpaul/form-extractor-prototype/tree/main/app/views).
 
-The script in `public/assets/scripts.js` handles the image preview and loading spinner.
+Additional CSS styles are in [public/assets/style.css](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/style.scss).
 
-The form in `index.html` sends the image at the URL provided by the user to the Claude API. 
+The script in [public/assets/scripts.js](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/scripts.js) handles the image preview and loading spinner.
 
-It does this via the 'SendToClaude' function in `server.js`.
+The form in [index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html) sends the image at the URL provided by the user to the Claude API. 
+
+It does this via the 'SendToClaude' function in [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
 
 The function makes use of the 'tools' feature of Claude.
 
 That allows you to specify a JSON schema that you'd like it's response to conform to.
 
-The results are saved as JSON files in `app/data/`.
+The JSON schema is specified in [data/extract-form-questions.json](https://github.com/timpaul/form-extractor-prototype/blob/main/data/extract-form-questions.json).
 
-Those files are used to generate the pages that are loaded into iframes in `app/views/index.html`.
+The results are saved as JSON files in [app/data/](https://github.com/timpaul/form-extractor-prototype/tree/main/app/data).
+
+Those files are used to generate the pages that are loaded into iframes in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
+
+Those pages are specified in the routing rules at the bottom of [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
 
