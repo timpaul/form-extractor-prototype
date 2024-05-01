@@ -61,5 +61,9 @@ The results are saved as JSON files in [app/data/](https://github.com/timpaul/fo
 
 Those files are used to generate the pages that are loaded into iframes in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
 
+The form components are specificed in [app/views/answer-types.njk](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/answer-types.njk)
+
+They are built using the Nunjucks components in [GOV.UK Frontend](https://www.npmjs.com/package/govuk-frontend).
+
 Page rendering is defined in the URL routing rules found at the bottom of [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
 
