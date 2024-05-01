@@ -26,6 +26,10 @@
                       "type": "string",
                       "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. Use 'null' if there is no hint text"
                   },
+                  "needs_routing": {
+                      "type": "boolean",
+                      "description": "True if any part of the question contains text like 'Go to page...' or 'Go to question...'"
+                  },
                   "answer_type": {
                       "type": "string",
                       "description": "The type of question being asked, based on the fields. If a question contains square boxes, it's probably a multiple_choice question. If it's asking how many of something there is, it's probably a number question.",

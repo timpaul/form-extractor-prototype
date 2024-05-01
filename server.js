@@ -106,10 +106,10 @@ app.post('/sendToClaude', async (req, res) => {
         ],
       }]
     });
-  
+
     console.log(message);
 
-    let result = message.content[1].input;
+    let result = message.content[1].input; 
 
     result.imageURL = image_url
 

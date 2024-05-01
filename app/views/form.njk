@@ -21,6 +21,15 @@
 
 
 {% block beforeContent %}
+
+  {% if currentPageJSON.needs_routing == true %}
+  {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+  {{ govukNotificationBanner({
+    text: "It looks like this page needs conditional routing. Check the original form.",
+    classes: "govuk-!-margin-top-2"
+  }) }}
+
+{% endif %}
     {% if not alert %}
     {{ govukBackLink({
       text: "Back",
@@ -99,6 +108,7 @@
 
   </div>
 </div>
+
 {% endblock %}
 
 {% if alert %}
