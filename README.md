@@ -61,5 +61,5 @@ The results are saved as JSON files in [app/data/](https://github.com/timpaul/fo
 
 Those files are used to generate the pages that are loaded into iframes in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
 
-Those pages are specified in the routing rules at the bottom of [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
+Page rendering is defined in the URL routing rules found at the bottom of [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
 
