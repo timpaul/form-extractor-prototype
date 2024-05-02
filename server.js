@@ -111,7 +111,7 @@ app.post('/sendToClaude', async (req, res) => {
 
     let result = message.content[1].input; 
 
-    result.imageURL = image_url
+    result.imageURL = image_url;
 
     // Write the results into a 'results' folder
 
