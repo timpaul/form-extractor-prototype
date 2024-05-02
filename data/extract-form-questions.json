@@ -32,7 +32,7 @@
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of question being asked, based on the fields. If a question contains square boxes, it's probably a multiple_choice question. If it's asking how many of something there is, it's probably a number question.",
+                      "description": "The type of question being asked, based on the fields. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
                       "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question"]
                   },
                   "answer_settings": {

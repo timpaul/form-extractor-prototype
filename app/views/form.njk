@@ -86,10 +86,10 @@
         {{ answerType.yes_no(currentPageJSON.question_text, currentPageJSON.hint_text) }}
 
       {% elif currentPageJSON.answer_type == "single_choice" %}
-        {{ answerType.single_choice(currentPageJSON.question_text, currentPageJSON.options) }}
+        {{ answerType.single_choice(currentPageJSON.question_text, currentPageJSON.hint_text, currentPageJSON.options) }}
 
       {% elif currentPageJSON.answer_type == "multiple_choice" %}
-        {{ answerType.multiple_choice(currentPageJSON.question_text, currentPageJSON.options) }}
+        {{ answerType.multiple_choice(currentPageJSON.question_text, currentPageJSON.hint_text, currentPageJSON.options) }}
 
       {% else %}
         <h1 class="govuk-heading-l">
