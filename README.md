@@ -14,6 +14,9 @@ Here's a short demo video:
 
 https://github.com/timpaul/form-extractor-prototype/assets/1590604/8adea926-808e-4011-80c6-18ce4a549a00
 
+You'll notice that it doesn't try to faithfully replicate every field in a question.
+Instead, it uses the relevant components and patterns from the [GOV.UK Design System](https://design-system.service.gov.uk/).
+This is a feature not a bug ;-)
 
 ## Run locally
 
@@ -26,6 +29,16 @@ Install the app locally with `npm install`.
 Start the app with `npm start`.
 
 It'll be available at http://localhost:3000/
+
+## Current capabilities
+
+- breaking a form down into questions
+- distinguishing between question, hint and field text
+- distinguishing between single-choice and multiple-choice questions
+- recognising common question types like 'name', 'address', 'date' etc.
+- recognising when an image isn't a form
+- recognising when a question has conditional routing
+- processing hand drawn forms
 
 ## Current limitations
 
