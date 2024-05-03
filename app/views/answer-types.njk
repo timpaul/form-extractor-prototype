@@ -62,7 +62,7 @@
 
 {# DATE OF BIRTH #}
 
-{% macro dateOfBirth(question, hint) %}
+{% macro date_of_birth(question, hint) %}
 {{ govukDateInput({
   id: "dob",
   namePrefix: "dob",
@@ -183,6 +183,9 @@
     text: question,
     classes: "govuk-label--l",
     isPageHeading: true
+  },
+  hint: {
+    text: hint
   },
   id: "telephone-number",
   name: "telephoneNumber",
