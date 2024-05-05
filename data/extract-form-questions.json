@@ -26,7 +26,7 @@
                   },
                   "hint_text": {
                       "type": "string",
-                      "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. Use 'null' if there is no hint text"
+                      "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. An example of hint text is 'Tick the box or boxes that apply'"
                   },
                   "needs_routing": {
                       "type": "boolean",
@@ -35,7 +35,7 @@
                   "answer_type": {
                       "type": "string",
                       "description": "The type of question being asked, based on the fields. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
-                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question"]
+                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "yes_no_question", "text"]
                   },
                   "answer_settings": {
                       "type": "object",
@@ -49,7 +49,7 @@
                   },
                   "options": {
                     "type": "array",
-                    "description": "If the answer_type is single_choice or multiple_choice, list the options here. Only give options that appear in the original image, do not make any up",
+                    "description": "If the answer_type is single_choice or multiple_choice, list the options here. Only give options that appear in the original image, do not make any up. There should be the same number of options as boxes or circles. Phrases like 'Tick the box' are never options.",
                     "items": {
                       "type": "object",
                       "properties": {

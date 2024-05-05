@@ -55,7 +55,10 @@
       <span class="govuk-caption-m">Question {{question}}</span>
 
       
-      {% if currentPageJSON.answer_type == "date" %}
+      {% if currentPageJSON.answer_type == "date" and currentPageJSON.answer_settings.input_type == "date_of_birth" %}
+        {{ answerType.date_of_birth(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+
+      {% elif currentPageJSON.answer_type == "date" %}
         {{ answerType.other_date(currentPageJSON.question_text, currentPageJSON.hint_text) }}
 
       {% elif currentPageJSON.answer_type == "name" %}
