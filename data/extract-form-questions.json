@@ -3,6 +3,7 @@
     "description": "Extract the questions from an image of a form. If the image is not a form, explain this in the 'alert' property.",
     "input_schema": {
       "type": "object",
+      "required": ["pages"],
       "properties": {
           "alert": {
               "type": "string",
@@ -13,6 +14,7 @@
               "description": "An array of the questions in the form. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes.",
               "items": {
                 "type": "object",
+                "required": ["id", "question_text", "answer_type"],
                 "properties": {
                   "id": {
                       "type": "number",

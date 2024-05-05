@@ -76,6 +76,7 @@ app.post('/sendToClaude', async (req, res) => {
   const prompt = [
     "Is this a form?", 
     "It's only a form if it contains form field boxes.",
+    "Hand drawn forms, questionnaires and surveys are all valid forms.",
     "If it is a form, extract the questions from it using the extract_form_questions tool."
   ].join();
 
