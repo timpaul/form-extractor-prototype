@@ -129,7 +129,7 @@ app.post('/sendToClaude', async (req, res) => {
 
 // THE WEB PAGES
 
-const port = 3000;
+const port = process.env.PORT || 80;
 
 /* Render query page */
 app.get('/', (req, res) => {
@@ -187,5 +187,5 @@ app.get('/results/:formId', (req, res) => {
 })
 
 app.listen(port, () => {
-	console.log('Server running at http://localhost:3000');
+  console.log(`Server running on port ${port}`);
 })
