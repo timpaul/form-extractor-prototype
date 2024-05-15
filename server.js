@@ -26,11 +26,11 @@ import extractFormQuestions from './data/extract-form-questions.json' assert { t
 // get API Key from environment variable ANTHROPIC_API_KEY
 const anthropic = new Anthropic();
 
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets')))
+app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/dist/govuk/assets')))
 
 nunjucks.configure([
   'app/views', 
-  'node_modules/govuk-frontend/'
+  'node_modules/govuk-frontend/dist/'
 ],
 {
   autoescape: true,

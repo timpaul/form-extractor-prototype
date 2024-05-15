@@ -117,7 +117,10 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="/assets/all.js"></script>
+  <script type="module" src="/assets/govuk-frontend.min.js"></script>
+  <script type="module">
+    import { initAll } from '/assets/govuk-frontend.min.js'
+    initAll()
+  </script>  
   <script src="/assets/scripts.js"></script>
-  <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
