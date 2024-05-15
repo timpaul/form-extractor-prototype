@@ -166,7 +166,17 @@ app.get('/forms/:formId/:question', (req, res) => {
   const formData = loadFormData(formId)
   res.locals.formData = formData
   res.locals.question = question
+  res.locals.formId = formId
   res.render('form.njk');
+})
+
+/* Render check-answers pages */
+app.get('/check-answers/:formId', (req, res) => {
+  const formId = req.params.formId 
+  const formData = loadFormData(formId)
+  res.locals.formData = formData
+  res.locals.formId = formId
+  res.render('check-answers.njk')
 })
 
 /* Render list pages */

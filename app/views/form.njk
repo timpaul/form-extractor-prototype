@@ -102,10 +102,20 @@
       {% endif %}
 
 
-  {{ govukButton({
-      text: "Continue",
-      href: question | float + 1
-  }) }}
+
+
+
+      {% if formData.pages | length == question %}
+        {{ govukButton({
+          text: "Continue",
+          href: "/check-answers/" + formId
+        }) }}
+      {% else %}
+        {{ govukButton({
+          text: "Continue",
+          href: question | float + 1
+        }) }}        
+      {% endif %}
 
     {% endif %}
 
