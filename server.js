@@ -1,12 +1,15 @@
 import 'dotenv/config'
-
 import fs from "fs";
-
 import bodyParser from 'body-parser';
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import fetch from 'node-fetch';
+import { fromPath } from "pdf2pic";
+import multer from 'multer';
+
+
+// === SET UP EXPRESS === //
 
 var app = express();
 
@@ -21,11 +24,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
-import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
-
-// get API Key from environment variable ANTHROPIC_API_KEY
-const anthropic = new Anthropic();
-
 app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/dist/govuk/assets')))
 
 nunjucks.configure([
@@ -39,20 +37,60 @@ nunjucks.configure([
 })
 
 app.set('view engine', 'html')
-
 app.use(express.json());
 app.use(express.static('public'));
 
 
-// CALL CLAUDE
+// === SET UP APP === //
 
-app.post('/sendToClaude', async (req, res) => {
+// get JSON schema to pass to Claude
+import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
 
-  // Encode the image data into base64  
-  const image_url = req.body.imageURL;
+// get API Key from environment variable ANTHROPIC_API_KEY
+const anthropic = new Anthropic();
+
+// Define a temporary location for uploaded PDFs
+var storage = multer.diskStorage({  
+  destination: function (req, file, cb) { 
+      cb(null, './public/results/')
+  },
+  filename: function (req, file, cb) {
+      cb(null, "form" + path.extname(file.originalname));
+  }
+})
+const upload = multer({ storage: storage })
+
+
+// === CALL CLAUDE === //
+
+app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
+
+  // Create a result folder to save the PDF, images and JSON in
+  const now = `${Date.now()}`; // Create unique result ID
+  var savePath =  "./public/results/" + now;
+  fs.mkdirSync(savePath);
+
+  // Move the PDF file into the result folder
+  fs.renameSync('./public/results/form.pdf', savePath + '/form.pdf');
+
+  // Define the PDF-to-image conversion options
+  const options = {
+    density: 300,
+    saveFilename: "page",
+    savePath: savePath,
+    format: "jpeg",
+    width: 600,
+    preserveAspectRatio: true
+  };
+  
+  // Save images of all the pages in the PDF
+  const convert = fromPath(savePath + '/form.pdf', options)
+  await convert.bulk(-1)
+
+  // Encode the 1st image data into base64  
   const image_media_type = "image/jpeg"
-  const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
-  const image_data = Buffer.from(image_array_buffer).toString('base64');
+  const image = fs.readFileSync(savePath + "/page.1.jpeg")
+  const image_data = Buffer.from(image).toString('base64')
 
   // Create a HTML wrapper for the JSON result to go in
   const jsonWrapper = (content) => `
@@ -74,20 +112,18 @@ app.post('/sendToClaude', async (req, res) => {
 
   // Create the prompt to send with the image and the tool
   const prompt = [
-    "Is this a form?", 
+    "Is this image a form?", 
     "It's only a form if it contains form field boxes.",
     "Hand drawn forms, questionnaires and surveys are all valid forms.",
     "If it is a form, extract the questions from it using the extract_form_questions tool."
   ].join();
 
   // Call Claude!
-
   try {
-
     const message = await anthropic.beta.tools.messages.create({
       model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
       temperature: 0.0, // Low temp keeps the results more consistent
-      max_tokens: 2048,
+      max_tokens: 4096,
       tools: [ extractFormQuestions ],
       messages: [{
         "role": "user",
@@ -111,16 +147,12 @@ app.post('/sendToClaude', async (req, res) => {
     console.log(message);
 
     let result = message.content[1].input; 
+    //result.imageURL = image_url; // Append image URL to JSON
+    result.numImages = fs.readdirSync(savePath).length -1; // Append number of images to JSON
 
-    result.imageURL = image_url;
-
-    // Write the results into a 'results' folder
-
-    const now = `${Date.now()}`;
-
-    // Write the files
+    // Write the JSON file
     try {
-      fs.writeFileSync('app/data/' + now + '.json', JSON.stringify(result, null, 2));
+      fs.writeFileSync(savePath + '/form.json', JSON.stringify(result, null, 2));
     } catch (err) {
       console.error(err);
     }
@@ -131,7 +163,6 @@ app.post('/sendToClaude', async (req, res) => {
     console.error('Error in Claude API call:', error);
       return res.status(500).send('Error processing the request');
   }
-
 });
 
 
@@ -153,7 +184,7 @@ app.get('/loading.html', (req, res) => {
 
 function loadFormData(formId){
   try {
-    return JSON.parse(fs.readFileSync('./app/data/'+formId+'.json'))
+    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/form.json'))
   } catch (err) {
     console.error(err)
   }
@@ -196,6 +227,7 @@ app.get('/json/:formId', (req, res) => {
   res.render('json.njk')
 })
 
+/* Render results pages */
 app.get('/results/:formId', (req, res) => {
   const formId = req.params.formId 
   const formData = loadFormData(formId)

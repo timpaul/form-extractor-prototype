@@ -19,41 +19,7 @@
   {% from "govuk/components/button/macro.njk" import govukButton %}
   {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
-
-  <div class="govuk-!-padding-3 govuk-!-margin-bottom-6" style="background: #f3f2f1">
-    <form action="/sendToClaude" id="submit-url" method="post" novalidate>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">   
-        {{ govukInput({
-          label: {
-            text: "Enter form image URL"
-          },
-          id: "imageURL",
-          name: "imageURL",
-          formGroup: {
-            classes: "govuk-!-margin-bottom-3"
-          }
-        }) }}
-        {{ govukButton({
-          id: 'submit-url-button',
-          text: "Extract form",
-          classes: "govuk-!-margin-bottom-0"
-        }) }}
-        </div>
-        <div class="govuk-grid-column-one-half">
-
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2">What is this?</h3>
-          <p class="govuk-body govuk-!-margin-bottom-0">
-            This tool extracts the structure from an image of a form, then creates an equivalent web form in the GOV.UK style.
-            Try it with this <a href="/example-forms/CH2_English_online-1.jpg">example form image</a>.
-          </p>
-        </div>
-      </div>
-    </form>
-  </div>
-
-
+  {% include "upload-panel.njk" %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
@@ -61,7 +27,10 @@
   <h2 class="govuk-heading-m">Original form</h2>
 
   <div class="form-image-container">
-    <img id="formImage" class="form-image" src="{{ formData.imageURL }}" />
+    {% for i in range(formData.numImages) -%}
+    <img id="formImage" class="form-image" src="page.{{ i+1 }}.jpeg" />
+    {%- endfor %}
+    <img id="formImage" class="form-image" src="page.1.jpeg" />
   </div>
 
   </div>

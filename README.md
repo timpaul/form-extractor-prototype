@@ -18,13 +18,19 @@ You'll notice that it doesn't try to faithfully replicate every field in a quest
 Instead, it uses the relevant components and patterns from the [GOV.UK Design System](https://design-system.service.gov.uk/).
 This is a feature not a bug ;-)
 
-## Run locally
+## Install
 
 You'll need an [Anthropic API key](https://www.anthropic.com/api).
 
 Add the key as a local environment variable called `ANTHROPIC_API_KEY`.
 
 Install the app locally with `npm install`.
+
+You'll also need to install GraphicsMagick. It's used to convert PDF pages into images.
+
+[There's a guide for doing that here](https://github.com/yakovmeister/pdf2image/blob/HEAD/docs/gm-installation.md).
+
+## Run
 
 Start the app with `npm start`.
 

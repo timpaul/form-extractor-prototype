@@ -7542,7 +7542,9 @@ pre {
 
 .form-image-container {
   border: 1px solid #b1b4b6;
-  min-height: 660px;
+  height: 662px;
+  overflow: auto;
+  margin-top: -5px;
 }
 
 .extracted-form {
