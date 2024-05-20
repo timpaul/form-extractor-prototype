@@ -40,6 +40,10 @@
 
 {% block content %}
 
+{% if formData.extracted == false %}
+[NOT EXTRACTED YET]
+{% endif %}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 

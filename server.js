@@ -60,10 +60,9 @@ var storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
+// === UPLOAD DOCUMENT === //
 
-// === CALL CLAUDE === //
-
-app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
+app.post('/uploadFile', upload.single('pdfUpload'), async (req, res) => {
 
   // Create a result folder to save the PDF, images and JSON in
   const now = `${Date.now()}`; // Create unique result ID
@@ -86,6 +85,14 @@ app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
   // Save images of all the pages in the PDF
   const convert = fromPath(savePath + '/form.pdf', options)
   await convert.bulk(-1)
+
+  res.redirect('/results/' + now + "/1");
+
+});
+
+// === CALL CLAUDE === //
+
+app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
 
   // Encode the 1st image data into base64  
   const image_media_type = "image/jpeg"
@@ -182,49 +189,70 @@ app.get('/loading.html', (req, res) => {
 
 // load form data
 
-function loadFormData(formId){
+function loadFormData(formId, pageNum){
   try {
-    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/form.json'))
+    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/page.'+pageNum+'.json'))
   } catch (err) {
-    console.error(err)
+    return JSON.parse('{"extracted": false}')
   }
 }
 
 /* Render form pages */
-app.get('/forms/:formId/:question', (req, res) => {
+app.get('/forms/:formId/:pageNum/:question', (req, res) => {
   const formId = req.params.formId 
+  const pageNum = req.params.pageNum 
   const question = Number(req.params.question)
-  const formData = loadFormData(formId)
+  const formData = loadFormData(formId, pageNum)
   res.locals.formData = formData
   res.locals.question = question
   res.locals.formId = formId
+  res.locals.pageNum = pageNum
   res.render('form.njk');
 })
 
 /* Render check-answers pages */
-app.get('/check-answers/:formId', (req, res) => {
+app.get('/check-answers/:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
-  const formData = loadFormData(formId)
+  const pageNum = req.params.pageNum 
+  const formData = loadFormData(formId, pageNum)
   res.locals.formData = formData
   res.locals.formId = formId
+  res.locals.pageNum = pageNum
   res.render('check-answers.njk')
 })
 
 /* Render list pages */
-app.get('/lists/:formId', (req, res) => {
+app.get('/lists/:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
-  const formData = loadFormData(formId)
+  const pageNum = req.params.pageNum 
+  const formData = loadFormData(formId, pageNum)
   res.locals.formData = formData
+  res.locals.formId = formId
+  res.locals.pageNum = pageNum
   res.render('list.njk')
 })
 
 /* Render JSON pages */
-app.get('/json/:formId', (req, res) => {
+app.get('/json/:formId/:pageNum', (req, res) => {  
   const formId = req.params.formId 
-  let formData = loadFormData(formId)
+  const pageNum = req.params.pageNum 
+  var formData = loadFormData(formId, pageNum)
   formData = JSON.stringify(formData, null, 2);
   res.locals.formData = formData
+  res.locals.formId = formId
+  res.locals.pageNum = pageNum
   res.render('json.njk')
+})
+
+/* Render results pages */
+app.get('/results/:formId/:pageNum', (req, res) => {
+  const formId = req.params.formId 
+  const pageNum = req.params.pageNum 
+  const formData = loadFormData(formId, pageNum)
+  res.locals.formId = formId
+  res.locals.pageNum = pageNum
+  res.locals.formData = formData
+  res.render('result')
 })
 
 /* Render results pages */
