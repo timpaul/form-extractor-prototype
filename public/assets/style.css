@@ -7557,4 +7557,25 @@ pre {
   padding: 5px 0 1px 5px;
 }
 
+.form-pagination {
+  justify-content: space-between;
+}
+.form-pagination .govuk-pagination__item--current {
+  background-color: transparent;
+  width: 100%;
+  font-weight: normal;
+}
+.form-pagination .govuk-pagination__prev,
+.form-pagination .govuk-pagination__next,
+.form-pagination .govuk-pagination__list {
+  width: 33.33%;
+  font-weight: normal;
+}
+.form-pagination .govuk-pagination__list {
+  text-align: center;
+}
+.form-pagination .govuk-pagination__link[rel=next] {
+  float: right;
+}
+
 /*# sourceMappingURL=style.css.map */
