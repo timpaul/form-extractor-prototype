@@ -90,13 +90,16 @@ app.post('/uploadFile', upload.single('pdfUpload'), async (req, res) => {
 
 });
 
-// === CALL CLAUDE === //
+// === EXTRACT FORMS === //
 
-app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
+app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
+  const formId = req.params.formId 
+  const pageNum = req.params.pageNum
+  const savePath = "./public/results/" + formId;
 
-  // Encode the 1st image data into base64  
+  // Encode the image data into base64  
   const image_media_type = "image/jpeg"
-  const image = fs.readFileSync(savePath + "/page.1.jpeg")
+  const image = fs.readFileSync(savePath + "/page." + pageNum + ".jpeg")
   const image_data = Buffer.from(image).toString('base64')
 
   // Create a HTML wrapper for the JSON result to go in
@@ -156,15 +159,16 @@ app.post('/sendToClaude', upload.single('pdfUpload'), async (req, res) => {
     let result = message.content[1].input; 
     //result.imageURL = image_url; // Append image URL to JSON
     result.numImages = fs.readdirSync(savePath).length -1; // Append number of images to JSON
+    result.extracted = true
 
     // Write the JSON file
     try {
-      fs.writeFileSync(savePath + '/form.json', JSON.stringify(result, null, 2));
+      fs.writeFileSync(savePath + '/page.'+ pageNum +'.json', JSON.stringify(result, null, 2));
     } catch (err) {
       console.error(err);
     }
 
-    res.redirect('/results/' + now);
+    res.redirect('/results/' + formId + '/' + pageNum);
 
   } catch(error) {
     console.error('Error in Claude API call:', error);
@@ -252,7 +256,7 @@ app.get('/results/:formId/:pageNum', (req, res) => {
   res.locals.formId = formId
   res.locals.pageNum = pageNum
   res.locals.formData = formData
-  res.render('result')
+  res.render('result.njk')
 })
 
 /* Render results pages */
@@ -261,7 +265,7 @@ app.get('/results/:formId', (req, res) => {
   const formData = loadFormData(formId)
   res.locals.formId = formId
   res.locals.formData = formData
-  res.render('result')
+  res.render('result.njk')
 })
 
 app.listen(port, () => {

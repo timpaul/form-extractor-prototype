@@ -7578,4 +7578,12 @@ pre {
   float: right;
 }
 
+.form-extraction-panel {
+  margin-top: 70px;
+  height: 584px;
+  padding: 40px;
+  text-align: center;
+  background: #f3f2f1;
+}
+
 /*# sourceMappingURL=style.css.map */

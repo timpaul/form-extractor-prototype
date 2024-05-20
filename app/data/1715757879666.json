@@ -1,0 +1,109 @@
+{
+  "pages": [
+    {
+      "id": 1,
+      "question_text": "Do you have a National Insurance number?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 2,
+      "question_text": "Your title",
+      "hint_text": "For example Mrs, Miss, Ms, Mr or Dr",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "Mrs",
+          "value": "Mrs"
+        },
+        {
+          "text": "Miss",
+          "value": "Miss"
+        },
+        {
+          "text": "Ms",
+          "value": "Ms"
+        },
+        {
+          "text": "Mr",
+          "value": "Mr"
+        },
+        {
+          "text": "Dr",
+          "value": "Dr"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question_text": "Your last name or family name",
+      "answer_type": "name"
+    },
+    {
+      "id": 4,
+      "question_text": "Your first name and any middle names",
+      "answer_type": "name"
+    },
+    {
+      "id": 5,
+      "question_text": "Have you ever been known by any other last names or family names including your maiden name?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 6,
+      "question_text": "Your date of birth",
+      "answer_type": "date",
+      "answer_settings": {
+        "input_type": "date_of_birth"
+      }
+    },
+    {
+      "id": 7,
+      "question_text": "Your address",
+      "answer_type": "address",
+      "answer_settings": {
+        "input_type": "uk_address"
+      }
+    },
+    {
+      "id": 8,
+      "question_text": "Have you lived at this address for more than 12 months?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 9,
+      "question_text": "Tell us your last address",
+      "answer_type": "address",
+      "answer_settings": {
+        "input_type": "uk_address"
+      }
+    },
+    {
+      "id": 10,
+      "question_text": "Your mobile number or landline if you do not have a mobile",
+      "hint_text": "We may contact you about your claim. Our number may not show up if we call you.",
+      "answer_type": "phone_number"
+    },
+    {
+      "id": 11,
+      "question_text": "What is your nationality?",
+      "hint_text": "This is shown on your passport if you have one, for example, British, Irish, French, Polish.",
+      "answer_type": "text"
+    },
+    {
+      "id": 12,
+      "question_text": "Have you claimed Child Benefit for any children before?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 13,
+      "question_text": "Are you currently entitled to or receiving Child Benefit?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    }
+  ],
+  "imageURL": "http://localhost:3000/example-forms/CH2_English_online-1.jpg"
+}

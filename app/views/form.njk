@@ -23,14 +23,13 @@
 {% block beforeContent %}
 
   {% if currentPageJSON.needs_routing == true %}
-  {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-  {{ govukNotificationBanner({
-    text: "It looks like this page needs conditional routing. Check the original form.",
-    classes: "govuk-!-margin-top-2"
-  }) }}
-
-{% endif %}
-    {% if not alert %}
+    {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+    {{ govukNotificationBanner({
+      text: "It looks like this page needs conditional routing. Check the original form.",
+      classes: "govuk-!-margin-top-2"
+    }) }}
+  {% endif %}
+  {% if not alert %}
     {{ govukBackLink({
       text: "Back",
       href: question-1
@@ -39,10 +38,6 @@
 {% endblock %}
 
 {% block content %}
-
-{% if formData.extracted == false %}
-[NOT EXTRACTED YET]
-{% endif %}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -104,10 +99,6 @@
         </h1>
         <p class="govuk-body">{{currentPageJSON.hint_text}}</p>
       {% endif %}
-
-
-
-
 
       {% if formData.pages | length == question %}
         {{ govukButton({
