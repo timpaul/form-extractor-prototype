@@ -58,33 +58,66 @@ var storage = multer.diskStorage({
       cb(null, "form" + path.extname(file.originalname));
   }
 })
-const upload = multer({ storage: storage })
+
+// Define a function for counting files with specific extensions
+function getFilesFromPath(path, extension) {
+    let files = fs.readdirSync( path );
+    return files.filter( file => file.match(new RegExp(`.*\.(${extension})`, 'ig')));
+}
+
 
 // === UPLOAD DOCUMENT === //
 
-app.post('/uploadFile', upload.single('pdfUpload'), async (req, res) => {
+const upload = multer({ storage: storage })
 
-  // Create a result folder to save the PDF, images and JSON in
+app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
+
+  // Create a result folder to save the file, images and JSON in
+
   const now = `${Date.now()}`; // Create unique result ID
   var savePath =  "./public/results/" + now;
   fs.mkdirSync(savePath);
 
-  // Move the PDF file into the result folder
-  fs.renameSync('./public/results/form.pdf', savePath + '/form.pdf');
 
-  // Define the PDF-to-image conversion options
-  const options = {
-    density: 300,
-    saveFilename: "page",
-    savePath: savePath,
-    format: "jpeg",
-    width: 600,
-    preserveAspectRatio: true
-  };
-  
-  // Save images of all the pages in the PDF
-  const convert = fromPath(savePath + '/form.pdf', options)
-  await convert.bulk(-1)
+  const filetype = req.file.mimetype;
+  const tempFilePath = './public/results/' + req.file.filename;
+
+  if (filetype == 'image/jpeg') {
+    // Move the JPG file into the result folder
+    fs.renameSync(tempFilePath, savePath + '/page.1.jpeg');
+
+  } else if (filetype == 'application/pdf')  {
+
+    // Move the PDF file into the result folder
+    fs.renameSync(tempFilePath, savePath + '/form.pdf');
+
+    // Define the PDF-to-image conversion options
+    const options = {
+      density: 300,
+      saveFilename: "page",
+      savePath: savePath,
+      format: "jpeg",
+      width: 600,
+      preserveAspectRatio: true
+    };
+    
+    // Save images of all the pages in the PDF
+    const convert = fromPath(savePath + '/form.pdf', options)
+    await convert.bulk(-1)
+  }
+
+  // Create a JSON file for the PDF
+  const filePages = getFilesFromPath(savePath, ".jpeg").length
+  const formJson = {
+    "pages": [],
+    "filename": req.file.originalname,
+    "filePages": filePages
+  }
+  try {
+      fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
+    } catch (err) {
+      console.error(err);
+  }
 
   res.redirect('/results/' + now + "/1");
 
@@ -183,19 +216,26 @@ const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
-  res.render('index.html')
+  res.render('index.njk')
 })
 
 /* Render loading page */
 app.get('/loading.html', (req, res) => {
-  res.render('loading.html')
+  res.render('loading.njk')
 })
 
-// load form data
+/* Load form and file data functions */
 
 function loadFormData(formId, pageNum){
   try {
     return JSON.parse(fs.readFileSync('./public/results/'+formId+'/page.'+pageNum+'.json'))
+  } catch (err) {
+    return JSON.parse('{"extracted": false}')
+  }
+}
+function loadFileData(formId){
+  try {
+    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/form.json'))
   } catch (err) {
     return JSON.parse('{"extracted": false}')
   }
@@ -253,20 +293,14 @@ app.get('/results/:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
   const pageNum = req.params.pageNum 
   const formData = loadFormData(formId, pageNum)
+  const fileData = loadFileData(formId)
   res.locals.formId = formId
   res.locals.pageNum = pageNum
   res.locals.formData = formData
+  res.locals.fileData = fileData
   res.render('result.njk')
 })
 
-/* Render results pages */
-app.get('/results/:formId', (req, res) => {
-  const formId = req.params.formId 
-  const formData = loadFormData(formId)
-  res.locals.formId = formId
-  res.locals.formData = formData
-  res.render('result.njk')
-})
 
 app.listen(port, () => {
 	console.log('Server running at http://localhost:3000');

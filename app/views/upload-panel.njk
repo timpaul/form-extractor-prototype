@@ -1,51 +1,34 @@
-  <div class="govuk-!-padding-3 govuk-!-margin-bottom-6" style="background: #f3f2f1">
+  <div class="govuk-!-margin-bottom-2" >
     <form action="/uploadFile" id="file-upload" method="post" name="file-upload" enctype="multipart/form-data" novalidate>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">   
-        <!--
-        {{ govukInput({
-          label: {
-            text: "Enter form image URL"
-          },
-          id: "imageURL",
-          name: "imageURL",
-          formGroup: {
-            classes: "govuk-!-margin-bottom-3"
-          }
-        }) }}
-        {{ govukButton({
-          id: 'submit-url-button',
-          text: "Extract form",
-          classes: "govuk-!-margin-bottom-0"
-        }) }}-->
 
-        {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
-        {{ govukFileUpload({
-          id: "pdfUpload",
-          name: "pdfUpload",
-          label: {
-            text: "Upload a PDF"
-          },
-          attributes: {
-            accept: ".pdf"
-          }
-        }) }}
-        {{ govukButton({
-          id: 'submit-url-button',
-          text: "Upload form",
-          classes: "govuk-!-margin-bottom-0"
-        }) }}
+      <h1 class="govuk-heading-m">Upload a PDF form</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">   
+
+      <div class="govuk-form-group file-upload">
+        <label class="govuk-label" for="pdfUpload">
+          <span id="selected-file">
+          Click, or drag a file here
+          </span>
+          <input class="govuk-file-upload" aria-describedby="selected-file" id="fileUpload" name="fileUpload" type="file" accept=".pdf, .jpg">
+        </label>
+      </div>
 
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-two-thirds" style="padding-left: 0;">
+              <div class="govuk-button-group">
+        {{ govukButton({
+          id: 'submit-url-button',
+          text: "Upload",
+          classes: "govuk-!-margin-bottom-0"
+        }) }}
 
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2">What is this?</h3>
-          <p class="govuk-body govuk-!-margin-bottom-0">
-            This tool extracts the structure from an image of a form, then creates an equivalent web form in the GOV.UK style.
-            Try it with this <a href="/example-forms/CH2_English_online-1.jpg">example form image</a>.
-          </p>
+      </div>
+
         </div>
       </div>
+
     </form>
   </div>

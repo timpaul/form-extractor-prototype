@@ -21,65 +21,7 @@
 
   {% include "upload-panel.njk" %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-
-    <h2 class="govuk-heading-m">Original form</h2>
-
-    <div class="form-image-container">
-      <img id="formImage" class="form-image" src="" alt="" />
-    </div>
-
-    </div>
-    <div class="govuk-grid-column-one-half">
-
-  <h2 class="govuk-heading-m">Extracted form</h2>
-
-
-
-
-{% set formHtml %}
-<iframe class="extracted-form" id="formTabIframe" src="" width="100%" height="595px" scrolling="auto"></iframe>
-{% endset -%}
-{% set listHtml %}
-<iframe class="extracted-form" id="listTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
-{% endset -%}
-{% set jsonHtml %}
-<iframe class="extracted-form" id="jsonTabIframe" src="" width="100%" height="600px" scrolling="auto"></iframe>
-{% endset -%}
-
-{{ govukTabs({
-  items: [
-    {
-      label: "Form",
-      id: "form",
-      panel: {
-        html: formHtml
-      }
-    },
-    {
-      label: "List",
-      id: "list",
-      panel: {
-        html: listHtml
-      }
-    },
-    {
-      label: "JSON",
-      id: "json",
-      panel: {
-        html: jsonHtml
-      }
-    }
-  ]
-}) }}
-
-  
-
-  </div>
-  </div>
-
-</div>
+  <hr style="border: 1px solid #b1b4b6" />
 
 
 

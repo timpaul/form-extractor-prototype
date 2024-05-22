@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% set extracted = formData.extracted %}
+{% set filePages = fileData.filePages %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -14,19 +15,30 @@
     }) }}
   {% endblock %}
 
+
+
+{% block beforeContent %}
+  {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+    {{ govukBackLink({
+      text: "Back",
+      href: "/"
+    }) }}
+{% endblock %}
+
   {% block content %}
 
   {% from "govuk/components/input/macro.njk" import govukInput %}
   {% from "govuk/components/button/macro.njk" import govukButton %}
   {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
-  {% include "upload-panel.njk" %}
+<!--<h1 class="govuk-heading-l">{{ fileData.filename }}</h1>-->
+
 
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
 
-  <h2 class="govuk-heading-m">Original form</h2>
+  <h2 class="govuk-heading-m">Original file</h2>
 
   {% include "doc-pagination.njk" %}
 
@@ -41,13 +53,24 @@
 
 {% if not extracted %}
 
-  <div class="form-extraction-panel">
+    {% set formHtml %}
+   <div class="form-extraction-panel">
+
+   <h3 class="govuk-heading-s">Page {{pageNum}}</h3>
+   
         {{ govukButton({
-          id: 'exttract-form-button',
-          text: "Extract page " + pageNum,
+          id: 'extract-form-button',
+          text: "Extract form",
           href: "/extractForm/" + formId + "/" + pageNum
         }) }}
   </div>
+
+  {% endset -%}
+  {% set listHtml %}
+  {% endset -%}
+  {% set jsonHtml %}
+  {% endset -%}
+
 
 {% else %}
 
@@ -61,6 +84,7 @@
   <iframe class="extracted-form" id="jsonTabIframe" src="/json/{{ formId }}/{{ pageNum }}" width="100%" height="650px" scrolling="auto"></iframe>
   {% endset -%}
 
+{% endif %}
   {{ govukTabs({
     items: [
       {
@@ -87,7 +111,6 @@
     ]
   }) }}
 
-{% endif %}
 
   </div>
 </div>

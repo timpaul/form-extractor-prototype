@@ -109,9 +109,41 @@ pre {
 }
 
 .form-extraction-panel{
-    margin-top: 70px;
-    height: 584px;
+    /* margin-top: 70px; */
+    height: 576px;
     padding: 40px;
     text-align: center;
-    background: #f3f2f1;
+    /* background: #f3f2f1; */
+
+    #extract-form-button{
+    	width: 40%;
+    	line-height: 1.3157894737
+    }
+
+    h3{
+    	margin-top: 55%;   
+    }
+}
+
+.file-upload{
+	label{
+		position: relative;
+		padding: 7px 10px;
+    background-color: #f3f2f1;
+    box-shadow: 0 2px 0 #929191;
+    margin-top: -1px;
+    cursor: pointer;
+	}
+	label:hover{
+    background-color: #dbdad9;
+	}
+
+	input{
+	  position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+	}
 }

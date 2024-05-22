@@ -1,3 +1,4 @@
+/*
 document.getElementById('submit-url').addEventListener('submit', function(e) {
 
   // Load image preview, loading message and spinner when image is submitted
@@ -8,4 +9,15 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
   document.getElementById('formTabIframe').src = '/loading.html';
   document.getElementById('listTabIframe').src = '/loading.html';
   document.getElementById('jsonTabIframe').src = '/loading.html';
+});
+*/
+
+//var fileName = document.querySelector("#selected-file");
+var fileName = document.getElementById('selected-file');
+var fileInput = document.getElementById('fileUpload');
+
+
+fileInput.addEventListener('change', function(e) {
+  console.log('Woo!');
+  fileName.innerText = fileInput.value.split("\\").pop();
 });
