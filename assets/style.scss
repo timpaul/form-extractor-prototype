@@ -122,19 +122,16 @@ pre {
 }
 
 .upload-panel{
-	padding: 10px 10px 0;
-	background: #f3f2f1;
-	margin-bottom: 5px;
 
 	.file-upload{
-		margin-bottom: 0;
 		label{
 			position: relative;
-	    padding: 6px 10px 5px 10px;
+	    padding: 60px;
 			margin-bottom: 0;
-	    background-color: #ffff;
+	    background-color: #f3f2f1;
 	    cursor: pointer;
 	    border: 2px solid #0b0c0c;
+	    text-align: center;
 		}
 
 		input{
@@ -151,7 +148,7 @@ pre {
 
 .form-list{
 	display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 15px;
 
 	a{

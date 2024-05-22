@@ -41,13 +41,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-// === SET UP APP === //
 
-// get JSON schema to pass to Claude
-import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
-
-// get API Key from environment variable ANTHROPIC_API_KEY
-const anthropic = new Anthropic();
+// === UPLOAD DOCUMENT === //
 
 // Define a temporary location for uploaded PDFs
 var storage = multer.diskStorage({  
@@ -65,9 +60,6 @@ function getFilesFromPath(path, extension) {
     return files.filter( file => file.match(new RegExp(`.*\.(${extension})`, 'ig')));
 }
 
-
-// === UPLOAD DOCUMENT === //
-
 const upload = multer({ storage: storage })
 
 app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
@@ -75,9 +67,8 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
   // Create a result folder to save the file, images and JSON in
 
   const now = `${Date.now()}`; // Create unique result ID
-  var savePath =  "./public/results/" + now;
+  var savePath =  "./public/results/form-" + now;
   fs.mkdirSync(savePath);
-
 
   const filetype = req.file.mimetype;
   const tempFilePath = './public/results/' + req.file.filename;
@@ -87,7 +78,6 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
     fs.renameSync(tempFilePath, savePath + '/page.1.jpeg');
 
   } else if (filetype == 'application/pdf')  {
-
     // Move the PDF file into the result folder
     fs.renameSync(tempFilePath, savePath + '/form.pdf');
 
@@ -119,16 +109,23 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
       console.error(err);
   }
 
-  res.redirect('/results/' + now + "/1");
+  res.redirect('/results/form-' + now + "/1");
 
 });
 
+
 // === EXTRACT FORMS === //
+
+// get JSON schema to pass to Claude
+import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
+
+// get API Key from environment variable ANTHROPIC_API_KEY
+const anthropic = new Anthropic();
 
 app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
   const formId = req.params.formId 
   const pageNum = req.params.pageNum
-  const savePath = "./public/results/" + formId;
+  const savePath = "./public/results/form-" + formId;
 
   // Encode the image data into base64  
   const image_media_type = "image/jpeg"
@@ -201,7 +198,7 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
       console.error(err);
     }
 
-    res.redirect('/results/' + formId + '/' + pageNum);
+    res.redirect('/results/form-' + formId + '/' + pageNum);
 
   } catch(error) {
     console.error('Error in Claude API call:', error);
@@ -216,7 +213,7 @@ const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
-  const formList = fs.readdirSync('./public/results').filter((item) => item != '.gitignore');
+  const formList = fs.readdirSync('./public/results').filter((item) => item.startsWith("form-"));
   res.locals.formList = formList;
   res.render('index.njk')
 })
@@ -230,14 +227,14 @@ app.get('/loading.html', (req, res) => {
 
 function loadFormData(formId, pageNum){
   try {
-    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/page.'+pageNum+'.json'))
+    return JSON.parse(fs.readFileSync('./public/results/form-'+formId+'/page.'+pageNum+'.json'))
   } catch (err) {
     return JSON.parse('{"extracted": false}')
   }
 }
 function loadFileData(formId){
   try {
-    return JSON.parse(fs.readFileSync('./public/results/'+formId+'/form.json'))
+    return JSON.parse(fs.readFileSync('./public/results/form-'+formId+'/form.json'))
   } catch (err) {
     return JSON.parse('{"extracted": false}')
   }
@@ -291,7 +288,7 @@ app.get('/json/:formId/:pageNum', (req, res) => {
 })
 
 /* Render results pages */
-app.get('/results/:formId/:pageNum', (req, res) => {
+app.get('/results/form-:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
   const pageNum = req.params.pageNum 
   const formData = loadFormData(formId, pageNum)

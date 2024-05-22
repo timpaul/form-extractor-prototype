@@ -7589,21 +7589,14 @@ pre {
   margin-top: 55%;
 }
 
-.upload-panel {
-  padding: 10px 10px 0;
-  background: #f3f2f1;
-  margin-bottom: 5px;
-}
-.upload-panel .file-upload {
-  margin-bottom: 0;
-}
 .upload-panel .file-upload label {
   position: relative;
-  padding: 6px 10px 5px 10px;
+  padding: 60px;
   margin-bottom: 0;
-  background-color: white;
+  background-color: #f3f2f1;
   cursor: pointer;
   border: 2px solid #0b0c0c;
+  text-align: center;
 }
 .upload-panel .file-upload input {
   position: absolute;
@@ -7617,7 +7610,7 @@ pre {
 
 .form-list {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 15px;
 }
 .form-list a {

@@ -23,9 +23,24 @@
   {% from "govuk/components/button/macro.njk" import govukButton %}
   {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
+
+  <h1 class="govuk-heading-m">Extract a form</h1>
+
+  <div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+
+
   {% include "upload-panel.njk" %}
 
-  <h2 class="govuk-heading-m">Extracted forms</h2>
+  <h3 class="govuk-heading-s">What is this?</h2>
+
+  <p class="govuk-body">This tool takes an image or PDF of a form, then extracts the structure from it and generates an equivalent web form in the GOV.UK style.</p>
+
+
+
+  </div>
+  <div class="govuk-grid-column-one-half">
+
 
   <ul class="govuk-list form-list">
   {% for form in formList %}
@@ -36,6 +51,8 @@
     </li>
   {% endfor %}
   </ul>
+  </div>
+  </div>
 
 
 {% endblock %}
