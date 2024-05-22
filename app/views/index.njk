@@ -13,6 +13,10 @@
     }) }}
   {% endblock %}
 
+{% block beforeContent %}
+  {% include "breadcrumbs.njk" %}
+{% endblock %}
+
   {% block content %}
 
   {% from "govuk/components/input/macro.njk" import govukInput %}
@@ -21,9 +25,17 @@
 
   {% include "upload-panel.njk" %}
 
-  <hr style="border: 1px solid #b1b4b6" />
+  <h2 class="govuk-heading-m">Extracted forms</h2>
 
-
+  <ul class="govuk-list form-list">
+  {% for form in formList %}
+    <li>
+      <a href="/results/{{form}}/1">
+        <img src="/results/{{form}}/page.1.jpeg" />
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
 
 
 {% endblock %}

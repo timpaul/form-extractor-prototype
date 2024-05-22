@@ -1,34 +1,32 @@
-  <div class="govuk-!-margin-bottom-2" >
-    <form action="/uploadFile" id="file-upload" method="post" name="file-upload" enctype="multipart/form-data" novalidate>
 
-
-      <h1 class="govuk-heading-m">Upload a PDF form</h1>
-
+  {% from "govuk/components/button/macro.njk" import govukButton %}
+  <div class="upload-panel govuk-!-margin-bottom-6" >
+  <form action="/uploadFile" id="file-upload" method="post" name="file-upload" enctype="multipart/form-data" novalidate>
+    <h1 class="govuk-heading-m">Upload a form</h1>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">   
-
-      <div class="govuk-form-group file-upload">
-        <label class="govuk-label" for="pdfUpload">
-          <span id="selected-file">
-          Click, or drag a file here
-          </span>
-          <input class="govuk-file-upload" aria-describedby="selected-file" id="fileUpload" name="fileUpload" type="file" accept=".pdf, .jpg">
-        </label>
-      </div>
-
+        <div class="govuk-form-group file-upload">
+          <label class="govuk-label" for="pdfUpload">
+            <span id="selected-file">
+            Click, or drag a PDF or JPG here
+            </span>
+            <input class="govuk-file-upload" aria-describedby="selected-file" id="fileUpload" name="fileUpload" type="file" accept=".pdf, .jpg">
+          </label>
         </div>
-        <div class="govuk-grid-column-two-thirds" style="padding-left: 0;">
-              <div class="govuk-button-group">
+      </div>
+      <div class="govuk-grid-column-two-thirds" style="padding-left: 0;">
+        <div class="govuk-button-group">
         {{ govukButton({
           id: 'submit-url-button',
           text: "Upload",
           classes: "govuk-!-margin-bottom-0"
         }) }}
-
-      </div>
-
         </div>
       </div>
+    </div>
+  </form>
+</div>
 
-    </form>
-  </div>
+<!--
+  <hr style="border: 0; border-top: 1px solid #b1b4b6; margin-bottom: 20px" />-->
+  

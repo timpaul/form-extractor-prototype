@@ -6,33 +6,23 @@
   <link href="/assets/style.css" rel="stylesheet">
 {% endblock %}
 
-
-  {% block header %}
-    {{ govukHeader({
-      serviceName: "Form extractor prototype",
-      serviceUrl: "#",
-      useTudorCrown: true
-    }) }}
-  {% endblock %}
-
-
-
-{% block beforeContent %}
-  {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-    {{ govukBackLink({
-      text: "Back",
-      href: "/"
-    }) }}
+{% block header %}
+  {{ govukHeader({
+    serviceName: "Form extractor prototype",
+    serviceUrl: "#",
+    useTudorCrown: true
+  }) }}
 {% endblock %}
 
-  {% block content %}
+{% block beforeContent %}
+  {% include "breadcrumbs.njk" %}
+{% endblock %}
+
+{% block content %}
 
   {% from "govuk/components/input/macro.njk" import govukInput %}
   {% from "govuk/components/button/macro.njk" import govukButton %}
   {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-
-<!--<h1 class="govuk-heading-l">{{ fileData.filename }}</h1>-->
-
 
 
 <div class="govuk-grid-row">
@@ -57,7 +47,7 @@
    <div class="form-extraction-panel">
 
    <h3 class="govuk-heading-s">Page {{pageNum}}</h3>
-   
+
         {{ govukButton({
           id: 'extract-form-button',
           text: "Extract form",
@@ -70,7 +60,6 @@
   {% endset -%}
   {% set jsonHtml %}
   {% endset -%}
-
 
 {% else %}
 
@@ -110,7 +99,6 @@
       }
     ]
   }) }}
-
 
   </div>
 </div>

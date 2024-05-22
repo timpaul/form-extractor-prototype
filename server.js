@@ -216,6 +216,8 @@ const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
+  const formList = fs.readdirSync('./public/results').filter((item) => item != '.gitignore');
+  res.locals.formList = formList;
   res.render('index.njk')
 })
 

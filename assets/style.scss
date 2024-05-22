@@ -75,8 +75,6 @@ pre {
 }
 .extracted-form {
   border: 0px;
-  /*margin: -30px -20px -34px;
-  width: calc(100% + 40px);*/
 }
 
 #form, #json, #list{
@@ -109,11 +107,9 @@ pre {
 }
 
 .form-extraction-panel{
-    /* margin-top: 70px; */
     height: 576px;
     padding: 40px;
     text-align: center;
-    /* background: #f3f2f1; */
 
     #extract-form-button{
     	width: 40%;
@@ -125,25 +121,49 @@ pre {
     }
 }
 
-.file-upload{
-	label{
-		position: relative;
-		padding: 7px 10px;
-    background-color: #f3f2f1;
-    box-shadow: 0 2px 0 #929191;
-    margin-top: -1px;
-    cursor: pointer;
+.upload-panel{
+	padding: 10px 10px 0;
+	background: #f3f2f1;
+	margin-bottom: 5px;
+
+	.file-upload{
+		margin-bottom: 0;
+		label{
+			position: relative;
+	    padding: 6px 10px 5px 10px;
+			margin-bottom: 0;
+	    background-color: #ffff;
+	    cursor: pointer;
+	    border: 2px solid #0b0c0c;
+		}
+
+		input{
+		  position: absolute;
+			margin-bottom: 0;
+	    top: 0;
+	    left: 0;
+	    height: 100%;
+	    width: 100%;
+	    opacity: 0;
+		}
 	}
-	label:hover{
-    background-color: #dbdad9;
+}
+
+.form-list{
+	display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 15px;
+
+	a{
+  	border: 1px solid #b1b4b6;
+  	display: block;
+	}
+	a:hover{
+  		border: 1px solid #1d70b8;
 	}
 
-	input{
-	  position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
+	img{
+		width: 100%;
+		max-width: 200px;
 	}
 }
