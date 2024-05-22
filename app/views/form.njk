@@ -3,6 +3,8 @@
 
 {% set currentPageJSON = formData.pages[question-1] %}
 {% set alert = formData.alert %}
+{% set pageNum = formData.pageNum %}
+{% set formId = formData.formId %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -103,7 +105,8 @@
       {% if formData.pages | length == question %}
         {{ govukButton({
           text: "Continue",
-          href: "/check-answers/" + formId
+          href: "/results/form-" + formId + "/" + (pageNum + 1),
+          attributes: {target: "_top"}
         }) }}
       {% else %}
         {{ govukButton({

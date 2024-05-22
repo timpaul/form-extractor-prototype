@@ -187,9 +187,9 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     console.log(message);
 
     let result = message.content[1].input; 
-    //result.imageURL = image_url; // Append image URL to JSON
-    result.numImages = fs.readdirSync(savePath).length -1; // Append number of images to JSON
     result.extracted = true
+    result.pageNum = pageNum
+    result.formId = formId
 
     // Write the JSON file
     try {
@@ -202,7 +202,7 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
 
   } catch(error) {
     console.error('Error in Claude API call:', error);
-      return res.status(500).send('Error processing the request');
+    return res.status(500).send('Error processing the request');
   }
 });
 
