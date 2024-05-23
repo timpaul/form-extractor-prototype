@@ -13,19 +13,23 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
 */
 
 
+// Add class to body if the page is NOT inside an iframe
+// This is to style form pages slightly differently
+// if you are viewing them in a seperate tab
+
 if ( window == window.parent ) 
 { 
   console.log("Not iFrame"); 
   document.body.classList.add("noIframe");
 }
 
-//var fileName = document.querySelector("#selected-file");
-var fileName = document.getElementById('selected-file');
-var fileInput = document.getElementById('fileUpload');
 
 
 // File upload
+
+var fileName = document.getElementById('selected-file');
+var fileInput = document.getElementById('fileUpload');
+
 fileInput.addEventListener('change', function(e) {
   fileName.innerText = fileInput.value.split("\\").pop();
 });
-
