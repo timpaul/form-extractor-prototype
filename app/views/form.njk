@@ -12,9 +12,23 @@
 
 {% block header %}
   {% if not alert %}
+
+    {{ govukHeader({
+      useTudorCrown: true,
+      navigationClasses: "new-tab",
+      navigation: [{
+        text: "Open in new tab",
+        href: "/forms/" + formId + "/" + pageNum + "/" + question,
+        attributes:{
+          target: "_blank"
+        }
+      }]
+    }) }}
+<!--
     {{ govukHeader({
       useTudorCrown: true
-    }) }}
+    }) }}-->
+
   {% endif %}
 {% endblock %}
 
@@ -117,12 +131,6 @@
 
     {% endif %}
 
-    <p class="govuk-body">
-      <a class="govuk-link" href="/forms/{{formId}}/{{pageNum}}/{{question}}" target="_blank">
-        Open in new tab
-      </a>
-    </p>
-
   </div>
 </div>
 
@@ -141,4 +149,5 @@
     import { initAll } from '/assets/govuk-frontend.min.js'
     initAll()
   </script>  
+  <script src="/assets/scripts.js"></script>
 {% endblock %}

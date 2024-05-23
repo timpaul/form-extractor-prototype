@@ -12,12 +12,20 @@ document.getElementById('submit-url').addEventListener('submit', function(e) {
 });
 */
 
+
+if ( window == window.parent ) 
+{ 
+  console.log("Not iFrame"); 
+  document.body.classList.add("noIframe");
+}
+
 //var fileName = document.querySelector("#selected-file");
 var fileName = document.getElementById('selected-file');
 var fileInput = document.getElementById('fileUpload');
 
 
+// File upload
 fileInput.addEventListener('change', function(e) {
-  console.log('Woo!');
   fileName.innerText = fileInput.value.split("\\").pop();
 });
+

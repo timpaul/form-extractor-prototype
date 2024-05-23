@@ -170,3 +170,26 @@ pre {
   padding: 15px 0px;
   border-top: 1px solid #b1b4b6;
 }
+
+.new-tab{
+	#navigation{
+	  position: absolute;
+    top: 7px;
+    right: 0;
+    background: #0b0c0c;
+	}
+	.govuk-header__link{
+		font-weight: normal;
+	}
+	.govuk-header__link:hover{
+		text-decoration-thickness: max(2px);
+	}
+	.govuk-header__navigation-list[hidden]{
+		display: block;
+	}
+}
+
+// Hide new tab link if form is being viewed outside of the results iframe
+.noIframe .new-tab{
+	display: none;
+}
