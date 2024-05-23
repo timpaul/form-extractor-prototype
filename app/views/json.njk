@@ -8,9 +8,16 @@
 {% endblock %}
 
 {% block content %}
-  <pre style="overflow: hidden; margin: -20px -15px; padding: 20px 15px;">
-    {{ formData }}
-  </pre>
+
+<p class="govuk-body">
+  <a class="govuk-link" href="/results/form-{{formId}}/page.{{pageNum}}.json" download>
+    Download JSON
+  </a>
+</p>
+
+<pre class="json-wrapper">
+{{ formData }}
+</pre>
 {% endblock %}
 
 {% block footer %}
