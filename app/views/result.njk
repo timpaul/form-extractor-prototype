@@ -1,6 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% set extracted = formData.extracted %}
-{% set filePages = fileData.filePages %}
+{% set filePages = fileData.formStructure.length %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">

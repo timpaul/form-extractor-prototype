@@ -1,15 +1,13 @@
 {% extends "govuk/template.njk" %}
 {% import "answer-types.njk" as answerType %}
 
-{% set currentPageJSON = formData.pages[question-1] %}
-{% set alert = formData.alert %}
+{% set questionJson = fileData.pages[questionIndex] %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
 {% endblock %}
 
 {% block header %}
-  {% if not alert %}
 
     {{ govukHeader({
       useTudorCrown: true,
@@ -23,7 +21,6 @@
       }]
     }) }}
 
-  {% endif %}
 {% endblock %}
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
@@ -32,7 +29,7 @@
 
 {% block beforeContent %}
 
-  {% if currentPageJSON.needs_routing == true %}
+  {% if questionJson.needs_routing == true %}
     {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
     {{ govukNotificationBanner({
       text: "It looks like this page needs conditional routing. Check the original form.",
@@ -41,7 +38,7 @@
   {% endif %}
 
 
-  {% if not alert and pageNum > 1 and question > 1 %}
+  {% if pageNum > 1 and question > 1 %}
 
     {{ govukBackLink({
       text: "Back",
@@ -50,7 +47,7 @@
 
   {% endif %}
 
-  {% if not alert and pageNum > 1 and question == 1 %}
+  {% if pageNum > 1 and question == 1 %}
     {{ govukBackLink({
       text: "Back",
       href: "/results/form-" + formId + "/" + (pageNum - 1),
@@ -65,66 +62,57 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-    {% if alert %}
-      {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-      {{ govukWarningText({
-        text: "This is not a form",
-        iconFallbackText: "Alert"
-      }) }}
-      <p class="govuk-body">{{alert}}</p>
-    {% else %}
   
-      <span class="govuk-caption-m">Question {{question}}</span>
+      <span class="govuk-caption-m">Question {{questionIndex+1}}</span>
 
       
-      {% if currentPageJSON.answer_type == "date" and currentPageJSON.answer_settings.input_type == "date_of_birth" %}
-        {{ answerType.date_of_birth(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% if questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
+        {{ answerType.date_of_birth(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "date" %}
-        {{ answerType.other_date(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "date" %}
+        {{ answerType.other_date(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "name" %}
-        {{ answerType.name(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "name" %}
+        {{ answerType.name(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "number" %}
-        {{ answerType.number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "number" %}
+        {{ answerType.number(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "email" %}
-        {{ answerType.email(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "email" %}
+        {{ answerType.email(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "text" %}
-        {{ answerType.text(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "text" %}
+        {{ answerType.text(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "national_insurance_number" %}
-        {{ answerType.national_insurance_number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "national_insurance_number" %}
+        {{ answerType.national_insurance_number(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "phone_number" %}
-        {{ answerType.phone_number(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "phone_number" %}
+        {{ answerType.phone_number(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "organisation_name" %}
-        {{ answerType.organisation_name(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "organisation_name" %}
+        {{ answerType.organisation_name(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "address" %}
-        {{ answerType.address(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "address" %}
+        {{ answerType.address(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "yes_no_question" %}
-        {{ answerType.yes_no(currentPageJSON.question_text, currentPageJSON.hint_text) }}
+      {% elif questionJson.answer_type == "yes_no_question" %}
+        {{ answerType.yes_no(questionJson.question_text, questionJson.hint_text) }}
 
-      {% elif currentPageJSON.answer_type == "single_choice" %}
-        {{ answerType.single_choice(currentPageJSON.question_text, currentPageJSON.hint_text, currentPageJSON.options) }}
+      {% elif questionJson.answer_type == "single_choice" %}
+        {{ answerType.single_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
 
-      {% elif currentPageJSON.answer_type == "multiple_choice" %}
-        {{ answerType.multiple_choice(currentPageJSON.question_text, currentPageJSON.hint_text, currentPageJSON.options) }}
+      {% elif questionJson.answer_type == "multiple_choice" %}
+        {{ answerType.multiple_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
 
       {% else %}
         <h1 class="govuk-heading-l">
-          {{currentPageJSON.question_text}}
+          {{questionJson.question_text}}
         </h1>
-        <p class="govuk-body">{{currentPageJSON.hint_text}}</p>
+        <p class="govuk-body">{{questionJson.hint_text}}</p>
       {% endif %}
 
-      {% if formData.pages | length == question %}
+      {% if fileData.formStructure[pageNum-1] == question %}
         {{ govukButton({
           text: "Continue",
           href: "/results/form-" + formId + "/" + (pageNum + 1),
@@ -133,11 +121,9 @@
       {% else %}
         {{ govukButton({
           text: "Continue",
-          href: question | float + 1
+          href: question + 1
         }) }}        
       {% endif %}
-
-    {% endif %}
 
   </div>
 </div>
@@ -145,10 +131,6 @@
 
 
 {% endblock %}
-
-{% if alert %}
-{% block footer %}{% endblock %}
-{% endif %}
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}

@@ -100,7 +100,6 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
   const filePages = getFilesFromPath(savePath, ".jpeg").length
   var formJson = {
     "filename": req.file.originalname,
-    "filePages": filePages,
     "formStructure": [],
     "pages": []
   }
@@ -110,11 +109,7 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
     // The formStructure array stores the original structure of the document
     // Each number in the array is a page of the form
     // The number represents the number of questions on that page
-    // A -1 means we haven't extracted the questions from that page yet
-    formJson.formStructure.push(-1)
-    formJson.pages[i] = {
-      "filePage": i+1
-    }
+    formJson.formStructure.push(0)
   }
 
   // Save the JSON in the folder
@@ -129,7 +124,7 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
 });
 
 
-// === EXTRACT FORMS === //
+// === EXTRACT QUESTIONS === //
 
 // get JSON schema to pass to Claude
 import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
@@ -206,17 +201,21 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     result.pageNum = pageNum
     result.formId = formId
 
-
-
     // Update the form JSON file
 
     const formJson = loadFileData(formId);
-    const index = formJson.pages.findIndex(obj => obj.filePage === pageNum);
-    if (index !== -1) {
-      // Replace the object at the found index with the new objects
-      formJson.pages.splice(index, 1, ...result.pages);
-    }
 
+    // Calculate index to insert extracted questions into pages array
+    var index = 0;
+    for(let i = 0; i < pageNum-1; i++){
+         index += formJson.formStructure[i];
+    } 
+
+    // Update the pages array
+    var index = arraySum(formJson.formStructure, 0, pageNum-1)
+    formJson.pages.splice(index, 0, ...result.pages);
+
+    // Update the formStructure array
     formJson.formStructure.splice(pageNum-1,1,result.pages.length);
 
     fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
@@ -255,6 +254,16 @@ app.get('/loading.html', (req, res) => {
   res.render('loading.njk')
 })
 
+
+/* Sum the items between two indexes in a numerical array */
+function arraySum(array, start, end){
+    var sum = 0;
+    for(let i = start; i < end; i++){
+         sum += array[i];
+    } 
+    return sum;
+}
+
 /* Load form and file data functions */
 
 function loadFormData(formId, pageNum){
@@ -275,11 +284,14 @@ function loadFileData(formId){
 /* Render form pages */
 app.get('/forms/:formId/:pageNum/:question', (req, res) => {
   const formId = req.params.formId 
-  const pageNum = req.params.pageNum 
+  const pageNum = Number(req.params.pageNum)
   const question = Number(req.params.question)
-  const formData = loadFormData(formId, pageNum)
-  //const formData = loadFileData(formId)
-  res.locals.formData = formData
+
+  const fileData = loadFileData(formId)
+  
+  res.locals.questionIndex = arraySum(fileData.formStructure, 0, pageNum-1) + question -1
+
+  res.locals.fileData = fileData
   res.locals.question = question
   res.locals.formId = formId
   res.locals.pageNum = pageNum
