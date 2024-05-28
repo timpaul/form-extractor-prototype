@@ -98,11 +98,26 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
 
   // Create a JSON file for the PDF
   const filePages = getFilesFromPath(savePath, ".jpeg").length
-  const formJson = {
-    "pages": [],
+  var formJson = {
     "filename": req.file.originalname,
-    "filePages": filePages
+    "filePages": filePages,
+    "formStructure": [],
+    "pages": []
   }
+
+  // Add an item for each of the pages in the original file
+  for(var i=0; i<filePages; i++){
+    // The formStructure array stores the original structure of the document
+    // Each number in the array is a page of the form
+    // The number represents the number of questions on that page
+    // A -1 means we haven't extracted the questions from that page yet
+    formJson.formStructure.push(-1)
+    formJson.pages[i] = {
+      "filePage": i+1
+    }
+  }
+
+  // Save the JSON in the folder
   try {
       fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
     } catch (err) {
@@ -124,7 +139,7 @@ const anthropic = new Anthropic();
 
 app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
   const formId = req.params.formId 
-  const pageNum = req.params.pageNum
+  const pageNum = parseFloat(req.params.pageNum)
   const savePath = "./public/results/form-" + formId;
 
   // Encode the image data into base64  
@@ -191,7 +206,24 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     result.pageNum = pageNum
     result.formId = formId
 
-    // Write the JSON file
+
+
+    // Update the form JSON file
+
+    const formJson = loadFileData(formId);
+    const index = formJson.pages.findIndex(obj => obj.filePage === pageNum);
+    if (index !== -1) {
+      // Replace the object at the found index with the new objects
+      formJson.pages.splice(index, 1, ...result.pages);
+    }
+
+    formJson.formStructure.splice(pageNum-1,1,result.pages.length);
+
+    fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
+
+
+
+    // Write the page JSON file
     try {
       fs.writeFileSync(savePath + '/page.'+ pageNum +'.json', JSON.stringify(result, null, 2));
     } catch (err) {
@@ -246,6 +278,7 @@ app.get('/forms/:formId/:pageNum/:question', (req, res) => {
   const pageNum = req.params.pageNum 
   const question = Number(req.params.question)
   const formData = loadFormData(formId, pageNum)
+  //const formData = loadFileData(formId)
   res.locals.formData = formData
   res.locals.question = question
   res.locals.formId = formId

@@ -3,8 +3,6 @@
 
 {% set currentPageJSON = formData.pages[question-1] %}
 {% set alert = formData.alert %}
-{% set pageNum = formData.pageNum %}
-{% set formId = formData.formId %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -41,6 +39,8 @@
       classes: "govuk-!-margin-top-2"
     }) }}
   {% endif %}
+
+
   {% if not alert and pageNum > 1 and question > 1 %}
 
     {{ govukBackLink({
