@@ -263,12 +263,14 @@ function loadFileData(formId){
 
 
 /* Render results pages */
-app.get('/results/form-:formId/:pageNum', (req, res) => {
+app.get('/results/form-:formId/:pageNum/:question?', (req, res) => {
   const formId = req.params.formId 
-  const pageNum = req.params.pageNum 
+  const pageNum = Number(req.params.pageNum) 
+  const question = req.params.question ? Number(req.params.question) : 1
   const fileData = loadFileData(formId)
   res.locals.formId = formId
   res.locals.pageNum = pageNum
+  res.locals.question = question
   res.locals.fileData = fileData
   res.render('result.njk')
 })

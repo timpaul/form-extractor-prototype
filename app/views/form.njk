@@ -48,9 +48,12 @@
   {% endif %}
 
   {% if pageNum > 1 and question == 1 %}
+
+  {% set lastQuestion = fileData.formStructure[pageNum-2] %}
+
     {{ govukBackLink({
       text: "Back",
-      href: "/results/form-" + formId + "/" + (pageNum - 1),
+      href: "/results/form-" + formId + "/" + (pageNum - 1) + "/" + lastQuestion,
       attributes:{
           target: "_top"
         }

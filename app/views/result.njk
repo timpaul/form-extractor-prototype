@@ -32,7 +32,7 @@
   {% include "doc-pagination.njk" %}
 
   <div class="form-image-container">
-    <img id="formImage" class="form-image" src="page.{{ pageNum }}.jpeg" />
+    <img id="formImage" class="form-image" src="/results/form-{{formId}}/page.{{ pageNum }}.jpeg" />
   </div>
 
   </div>
@@ -71,7 +71,7 @@
 {% else %}
 
   {% set formHtml %}
-  <iframe class="extracted-form" id="formTabIframe" src="/forms/{{ formId }}/{{ pageNum }}/1" width="100%" height="648px" scrolling="auto"></iframe>
+  <iframe class="extracted-form" id="formTabIframe" src="/forms/{{ formId }}/{{ pageNum }}/{{question}}" width="100%" height="648px" scrolling="auto"></iframe>
   {% endset -%}
   {% set listHtml %}
   <iframe class="extracted-form" id="listTabIframe" src="/lists/{{ formId }}/{{ pageNum }}" width="100%" height="650px" scrolling="auto"></iframe>
