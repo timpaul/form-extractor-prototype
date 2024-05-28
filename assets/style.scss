@@ -44,16 +44,18 @@ pre {
 	margin-bottom: 0;
 }
 
-.govuk-button--submit, #spinner {
+.govuk-button--submit {
   display: inline-block;
 }
 #spinner {
   width: 30px;
   height: 30px;
-  margin-left: 10px;
-  margin-top: 6px;
-  /* float: right; */
-  display: inline-block;
+  display: none;
+  margin: 0 auto;
+}
+
+#spinner.visible{
+	display: block
 }
 
 .question{

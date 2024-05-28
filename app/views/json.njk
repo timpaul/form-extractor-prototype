@@ -10,13 +10,13 @@
 {% block content %}
 
 <p class="govuk-body">
-  <a class="govuk-link" href="/results/form-{{formId}}/page.{{pageNum}}.json" download>
+  <a class="govuk-link" href="/results/form-{{formId}}/form.json" download>
     Download JSON
   </a>
 </p>
 
 <pre class="json-wrapper">
-{{ formData }}
+{{ fileData | dump(2) }}
 </pre>
 {% endblock %}
 

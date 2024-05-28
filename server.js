@@ -42,9 +42,9 @@ app.use(express.static('public'));
 
 
 
-// === UPLOAD DOCUMENT === //
+// === UPLOAD FILE === //
 
-// Define a temporary location for uploaded PDFs
+// Define a temporary location for uploaded files
 var storage = multer.diskStorage({  
   destination: function (req, file, cb) { 
       cb(null, './public/results/')
@@ -124,7 +124,7 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
 });
 
 
-// === EXTRACT QUESTIONS === //
+// === EXTRACT FORM QUESTIONS FROM IMAGE === //
 
 // get JSON schema to pass to Claude
 import extractFormQuestions from './data/extract-form-questions.json' assert { type: 'json' };
@@ -194,18 +194,13 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
       }]
     });
 
-    console.log(message);
+    let result = message.content[1].input;
 
-    let result = message.content[1].input; 
-    result.extracted = true
-    result.pageNum = pageNum
-    result.formId = formId
-
-    // Update the form JSON file
+    // Load the file JSON
 
     const formJson = loadFileData(formId);
 
-    // Calculate index to insert extracted questions into pages array
+    // Calculate index to insert extracted questions into the pages array
     var index = 0;
     for(let i = 0; i < pageNum-1; i++){
          index += formJson.formStructure[i];
@@ -218,16 +213,8 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     // Update the formStructure array
     formJson.formStructure.splice(pageNum-1,1,result.pages.length);
 
+    // Save the updated file JSON
     fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
-
-
-
-    // Write the page JSON file
-    try {
-      fs.writeFileSync(savePath + '/page.'+ pageNum +'.json', JSON.stringify(result, null, 2));
-    } catch (err) {
-      console.error(err);
-    }
 
     res.redirect('/results/form-' + formId + '/' + pageNum);
 
@@ -264,85 +251,57 @@ function arraySum(array, start, end){
     return sum;
 }
 
-/* Load form and file data functions */
+/* Load file data  */
 
-function loadFormData(formId, pageNum){
-  try {
-    return JSON.parse(fs.readFileSync('./public/results/form-'+formId+'/page.'+pageNum+'.json'))
-  } catch (err) {
-    return JSON.parse('{"extracted": false}')
-  }
-}
 function loadFileData(formId){
   try {
     return JSON.parse(fs.readFileSync('./public/results/form-'+formId+'/form.json'))
   } catch (err) {
-    return JSON.parse('{"extracted": false}')
+    return err
   }
 }
 
-/* Render form pages */
-app.get('/forms/:formId/:pageNum/:question', (req, res) => {
-  const formId = req.params.formId 
-  const pageNum = Number(req.params.pageNum)
-  const question = Number(req.params.question)
 
-  const fileData = loadFileData(formId)
-  
-  res.locals.questionIndex = arraySum(fileData.formStructure, 0, pageNum-1) + question -1
-
-  res.locals.fileData = fileData
-  res.locals.question = question
-  res.locals.formId = formId
-  res.locals.pageNum = pageNum
-  res.render('form.njk');
-})
-
-/* Render check-answers pages */
-app.get('/check-answers/:formId/:pageNum', (req, res) => {
+/* Render results pages */
+app.get('/results/form-:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
   const pageNum = req.params.pageNum 
-  const formData = loadFormData(formId, pageNum)
-  res.locals.formData = formData
+  const fileData = loadFileData(formId)
   res.locals.formId = formId
   res.locals.pageNum = pageNum
-  res.render('check-answers.njk')
+  res.locals.fileData = fileData
+  res.render('result.njk')
+})
+
+/* Render form pages */
+app.get('/forms/:formId/:pageNum/:question', (req, res) => {
+  const formId = req.params.formId
+  const fileData = loadFileData(formId)
+  const pageNum = Number(req.params.pageNum)
+  const question = Number(req.params.question)
+  res.locals.formId = formId
+  res.locals.fileData = fileData
+  res.locals.pageNum = pageNum
+  res.locals.question = question
+  res.locals.questionIndex = arraySum(fileData.formStructure, 0, pageNum-1) + question -1
+  res.render('form.njk');
 })
 
 /* Render list pages */
 app.get('/lists/:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
-  const pageNum = req.params.pageNum 
-  const formData = loadFormData(formId, pageNum)
-  res.locals.formData = formData
-  res.locals.formId = formId
-  res.locals.pageNum = pageNum
+  const fileData = loadFileData(formId)
+  res.locals.fileData = fileData
   res.render('list.njk')
 })
 
 /* Render JSON pages */
 app.get('/json/:formId/:pageNum', (req, res) => {  
   const formId = req.params.formId 
-  const pageNum = req.params.pageNum 
-  var formData = loadFormData(formId, pageNum)
-  formData = JSON.stringify(formData, null, 2);
-  res.locals.formData = formData
-  res.locals.formId = formId
-  res.locals.pageNum = pageNum
-  res.render('json.njk')
-})
-
-/* Render results pages */
-app.get('/results/form-:formId/:pageNum', (req, res) => {
-  const formId = req.params.formId 
-  const pageNum = req.params.pageNum 
-  const formData = loadFormData(formId, pageNum)
   const fileData = loadFileData(formId)
   res.locals.formId = formId
-  res.locals.pageNum = pageNum
-  res.locals.formData = formData
   res.locals.fileData = fileData
-  res.render('result.njk')
+  res.render('json.njk')
 })
 
 
