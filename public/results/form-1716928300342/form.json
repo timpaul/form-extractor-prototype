@@ -1,0 +1,325 @@
+{
+  "filename": "CH2_English_online.pdf",
+  "formStructure": [
+    0,
+    13,
+    0,
+    8,
+    11,
+    0,
+    0,
+    0,
+    0
+  ],
+  "pages": [
+    {
+      "id": 1,
+      "question_text": "Do you have a National Insurance number?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 2,
+      "question_text": "Your title",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "Mr",
+          "value": "Mr"
+        },
+        {
+          "text": "Mrs",
+          "value": "Mrs"
+        },
+        {
+          "text": "Ms",
+          "value": "Ms"
+        },
+        {
+          "text": "M",
+          "value": "M"
+        },
+        {
+          "text": "W",
+          "value": "W"
+        },
+        {
+          "text": "Dr",
+          "value": "Dr"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question_text": "Your last name or family name",
+      "answer_type": "name"
+    },
+    {
+      "id": 4,
+      "question_text": "Your first name and any middle names",
+      "answer_type": "name"
+    },
+    {
+      "id": 5,
+      "question_text": "Have you ever been known by any other last names or family names including your maiden name?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 6,
+      "question_text": "Your date of birth",
+      "answer_type": "date",
+      "answer_settings": {
+        "input_type": "date_of_birth"
+      }
+    },
+    {
+      "id": 7,
+      "question_text": "Your address",
+      "answer_type": "address"
+    },
+    {
+      "id": 8,
+      "question_text": "Have you lived at this address for more than 12 months?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 9,
+      "question_text": "Tell us your last address",
+      "answer_type": "address"
+    },
+    {
+      "id": 10,
+      "question_text": "Your mobile number or landline if you do not have a mobile",
+      "answer_type": "phone_number",
+      "hint_text": "We may contact you about your claim or number may not show up if we call you."
+    },
+    {
+      "id": 11,
+      "question_text": "What is your nationality?",
+      "answer_type": "text",
+      "hint_text": "This is shown on your passport if you have one, for example, British, Irish, French, Polish."
+    },
+    {
+      "id": 12,
+      "question_text": "Have you claimed Child Benefit for any children before?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 13,
+      "question_text": "Are you currently entitled to or receiving Child Benefit?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 28,
+      "question_text": "What is your partner's employment status?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "Looking for work in the UK",
+          "value": "Looking for work in the UK"
+        },
+        {
+          "text": "Employed in the UK",
+          "value": "Employed in the UK"
+        },
+        {
+          "text": "Self-employed in the UK",
+          "value": "Self-employed in the UK"
+        },
+        {
+          "text": "None of these - they have enough money to support their family in the UK",
+          "value": "None of these - they have enough money to support their family in the UK"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "question_text": "Is your partner a member of HM Forces or a civil servant working abroad?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 30,
+      "question_text": "Does your partner now, or have they at any time in the last 3 months, worked in another country or received benefit from another country?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 31,
+      "question_text": "Is your partner entitled to Child Benefit now or are they waiting to hear if they can get Child Benefit?",
+      "answer_type": "yes_no_question",
+      "needs_routing": true
+    },
+    {
+      "id": 32,
+      "question_text": "What is the full name of the eldest child your partner is entitled to Child Benefit for?",
+      "answer_type": "name"
+    },
+    {
+      "id": 33,
+      "question_text": "Child's date of birth",
+      "answer_type": "date",
+      "answer_settings": {
+        "input_type": "date_of_birth"
+      }
+    },
+    {
+      "id": 34,
+      "question_text": "How many children are you claiming for on this form?",
+      "answer_type": "number"
+    },
+    {
+      "id": 35,
+      "question_text": "How many original birth certificates, adoption certificates, passports or travel documents are you sending us? If you do not send original documents a decision on your claim may be delayed.",
+      "answer_type": "number",
+      "hint_text": "Birth certificates - only send if the child's birth was registered in Northern Ireland or outside the UK, Adoption certificates, Passports, Travel documents"
+    },
+    {
+      "id": 38,
+      "question_text": "Child's full name including last or family name",
+      "answer_type": "name"
+    },
+    {
+      "id": 39,
+      "question_text": "Is this child male or female?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "Male",
+          "value": "Male"
+        },
+        {
+          "text": "Female",
+          "value": "Female"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "question_text": "Child's date of birth",
+      "answer_type": "date",
+      "answer_settings": {
+        "input_type": "date_of_birth"
+      }
+    },
+    {
+      "id": 41,
+      "question_text": "Has the child's birth been registered in England, Wales or Scotland?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "No",
+          "value": "No"
+        },
+        {
+          "text": "Yes",
+          "value": "Yes"
+        }
+      ],
+      "needs_routing": true
+    },
+    {
+      "id": 42,
+      "question_text": "Is this child your:",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "Birth child",
+          "value": "Birth child"
+        },
+        {
+          "text": "Adopted child",
+          "value": "Adopted child"
+        },
+        {
+          "text": "Stepchild",
+          "value": "Stepchild"
+        },
+        {
+          "text": "None of these",
+          "value": "None of these"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "question_text": "Have you or anyone else ever claimed Child Benefit for this child?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "No",
+          "value": "No"
+        },
+        {
+          "text": "Yes",
+          "value": "Yes"
+        }
+      ],
+      "needs_routing": true
+    },
+    {
+      "id": 44,
+      "question_text": "What is the name and address of the person who claimed Child Benefit for this child?",
+      "answer_type": "address"
+    },
+    {
+      "id": 45,
+      "question_text": "Does this child live with you in the UK?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "No",
+          "value": "No"
+        },
+        {
+          "text": "Yes",
+          "value": "Yes"
+        }
+      ],
+      "needs_routing": true
+    },
+    {
+      "id": 46,
+      "question_text": "Has this child lived with anyone else at a different address to you in the last 12 months?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "No",
+          "value": "No"
+        },
+        {
+          "text": "Yes",
+          "value": "Yes"
+        }
+      ],
+      "needs_routing": true
+    },
+    {
+      "id": 47,
+      "question_text": "What date did the child come to live with you?",
+      "answer_type": "date",
+      "answer_settings": {
+        "input_type": "other_date"
+      }
+    },
+    {
+      "id": 48,
+      "question_text": "Are you adopting or planning to adopt this child through a local authority?",
+      "answer_type": "single_choice",
+      "options": [
+        {
+          "text": "No",
+          "value": "No"
+        },
+        {
+          "text": "Yes",
+          "value": "Yes"
+        }
+      ]
+    }
+  ]
+}

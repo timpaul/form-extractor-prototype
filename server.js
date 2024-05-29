@@ -22,7 +22,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
-import extractFormQuestionsClaude from './data/extract-form-questions-claude.json' assert { type: 'json' };
+// Load schemas to use for Anthropic and OpenAI
+import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' assert { type: 'json' };
 import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' assert { type: 'json' };
 
 // get API Key from environment variable ANTHROPIC_API_KEY
@@ -47,80 +48,58 @@ app.set('view engine', 'html')
 app.use(express.json());
 app.use(express.static('public'));
 
-// CALL OPENAI
 
-async function sendToOpenAI (req, res) {
+async function sendToLLM (llm, req, res) {
 
-  const image_url = req.body.imageURL;
-  console.log(image_url);
-  const image_media_type = "image/jpeg";
-  const image_array_buffer = await ((await fetch(image_url)));
-  const image_data = image_array_buffer;
+  try{
+    console.log("Sending data to " + llm);
 
-  // Create a HTML wrapper for the JSON result to go in
-  const jsonWrapper = (content) => `
-    {% extends "json.njk" %}
-    {% block result %}${content}{% endblock %}
-  `;
+    // Encode the image data into base64  
+    const image_url = req.body.imageURL;
+    const image_media_type = "image/jpeg"
+    const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
+    const image_data = Buffer.from(image_array_buffer).toString('base64');
 
-  // Create a HTML wrapper for the List result to go in
-  const listWrapper = (content) => `
-    {% extends "list.njk" %}
-    {% set resultJSON = ${content} %}
-  `;
+    // Create a HTML wrapper for the JSON result to go in
+    const jsonWrapper = (content) => `
+      {% extends "json.njk" %}
+      {% block result %}${content}{% endblock %}
+    `;
 
-  // Create a HTML wrapper for the Form result to go in
-  const formWrapper = (content) => `
-    {% extends "form.njk" %}
-    {% set resultJSON = ${content} %}
-  `;
+    // Create a HTML wrapper for the List result to go in
+    const listWrapper = (content) => `
+      {% extends "list.njk" %}
+      {% set resultJSON = ${content} %}
+    `;
 
-  const prompt = [
-    "Is this a form?",
-    "It's only a form if it contains form field boxes.",
-    "Hand drawn forms, questionnaires and surveys are all valid forms.",
-    "If it is a form, extract the questions from it using the extract_form_questions tool.",
-    "If there is no output, explain why."
-  ].join(' ');
+    // Create a HTML wrapper for the Form result to go in
+    const formWrapper = (content) => `
+      {% extends "form.njk" %}
+      {% set resultJSON = ${content} %}
+    `;
 
-  try {
+    // Create the prompt to send with the image and the tool
+    const prompt = [
+      "Is this a form?",
+      "It's only a form if it contains form field boxes.",
+      "Hand drawn forms, questionnaires and surveys are all valid forms.",
+      "If it is a form, extract the questions from it using the extract_form_questions tool.",
+      "If there is no output, explain why."
+    ].join();
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      temperature: 0.0,
-      max_tokens: 2048,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image_url',
-              image_url: { "url": image_url }
+    // Call OpenAI or Anthropic LLM
+    
+    if (llm == "OpenAI"){
+      var result = await callOpenAI(image_url, prompt)
 
-            },
-            {
-              type: 'text',
-              text: prompt,
-            },
-          ],
-        },
-      ],
-      tools: [extractFormQuestionsOpenAI]
-    });
+    } else if (llm == "Anthropic"){
+      var result = await callAnthropic(image_data, image_media_type, image_url, prompt)
 
-    //console.log(completion);
-    //console.log(completion.choices[0].message);
-    //console.log(completion.choices[0].message.tool_calls[0].function);
-    let result = JSON.parse(completion.choices[0].message.tool_calls[0].function.arguments);
-    console.log(result)
-    //let result = completion.choices[0].message.tool_calls[0].function;
-
-    result.imageURL = image_url;
-
-    //console.log(result)
+    }
 
     // Write the results into a 'results' folder
     const now = `${Date.now()}`;
+
     try {
       fs.writeFileSync('app/data/' + now + '.json', JSON.stringify(result, null, 2));
     } catch (err) {
@@ -128,109 +107,92 @@ async function sendToOpenAI (req, res) {
     }
 
     res.redirect('/results/' + now);
+
   } catch (error) {
-    console.error('Error in OpenAI API call:', error);
-    return res.status(500).send('Error processing the request');
+    console.error('Error calling LLM: ', error);
+    return res.status(500).send('Error calling LLM');
   }
 };
 
-// CALL CLAUDE
 
-async function sendToClaude(req, res) {
+async function callOpenAI(image_url, prompt) {
 
-  // Encode the image data into base64  
-  const image_url = req.body.imageURL;
-  const image_media_type = "image/jpeg"
-  const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
-  const image_data = Buffer.from(image_array_buffer).toString('base64');
-
-  // Create a HTML wrapper for the JSON result to go in
-  const jsonWrapper = (content) => `
-    {% extends "json.njk" %}
-    {% block result %}${content}{% endblock %}
-  `;
-
-  // Create a HTML wrapper for the List result to go in
-  const listWrapper = (content) => `
-    {% extends "list.njk" %}
-    {% set resultJSON = ${content} %}
-  `;
-
-  // Create a HTML wrapper for the Form result to go in
-  const formWrapper = (content) => `
-    {% extends "form.njk" %}
-    {% set resultJSON = ${content} %}
-  `;
-
-  // Create the prompt to send with the image and the tool
-  const prompt = [
-    "Is this a form?",
-    "It's only a form if it contains form field boxes.",
-    "Hand drawn forms, questionnaires and surveys are all valid forms.",
-    "If it is a form, extract the questions from it using the extract_form_questions tool."
-  ].join();
-
-  // Call Claude!
-
-  try {
-
-    const message = await anthropic.beta.tools.messages.create({
-      model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
-      temperature: 0.0, // Low temp keeps the results more consistent
-      max_tokens: 2048,
-      tools: [extractFormQuestionsClaude],
-      messages: [{
-        "role": "user",
-        "content": [
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    temperature: 0.0,
+    max_tokens: 2048,
+    messages: [
+      {
+        role: 'user',
+        content: [
           {
-            "type": "image",
-            "source": {
-              "type": "base64",
-              "media_type": image_media_type,
-              "data": image_data,
-            },
+            type: 'image_url',
+            image_url: { "url": image_url }
+
           },
           {
-            "type": "text",
-            "text": prompt
-          }
+            type: 'text',
+            text: prompt,
+          },
         ],
-      }]
-    });
+      },
+    ],
+    tools: [extractFormQuestionsOpenAI]
+  });
 
-    console.log(message);
+  let result = JSON.parse(completion.choices[0].message.tool_calls[0].function.arguments);
+  result.imageURL = image_url;
+  console.log(result);
 
-    let result = message.content[1].input;
-
-    result.imageURL = image_url;
-
-    // Write the results into a 'results' folder
-
-    const now = `${Date.now()}`;
-
-    // Write the files
-    try {
-      fs.writeFileSync('app/data/' + now + '.json', JSON.stringify(result, null, 2));
-    } catch (err) {
-      console.error(err);
-    }
-
-    res.redirect('/results/' + now);
-
-  } catch (error) {
-    console.error('Error in Claude API call:', error);
-    return res.status(500).send('Error processing the request');
-  }
+  return result;
 
 };
+
+
+async function callAnthropic(image_data, image_media_type, image_url, prompt) {
+
+  const completion = await anthropic.beta.tools.messages.create({
+    model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
+    temperature: 0.0, // Low temp keeps the results more consistent
+    max_tokens: 2048,
+    tools: [extractFormQuestionsAnthropic],
+    messages: [{
+      "role": "user",
+      "content": [
+        {
+          "type": "image",
+          "source": {
+            "type": "base64",
+            "media_type": image_media_type,
+            "data": image_data,
+          },
+        },
+        {
+          "type": "text",
+          "text": prompt
+        }
+      ],
+    }]
+  });
+
+  let result = completion.content[1].input;
+  result.imageURL = image_url;
+  console.log(result);
+  
+  return result;
+
+};
+
+
 
 app.post('/sendToLLM', async (req, res) => {
 
   if (process.env.ANTHROPIC_API_KEY) {
-    return sendToClaude(req, res);
+    var llm = "Anthropic";
   } else if (process.env.OPENAI_API_KEY) {
-    return sendToOpenAI(req, res);
+    var llm = "OpenAI";
   }
+  return sendToLLM(llm, req, res)
 
 });
 
