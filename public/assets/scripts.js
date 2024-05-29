@@ -14,19 +14,6 @@ el && el.addEventListener('click', function(e) {
   document.getElementById('spinner').classList.add("visible")
 });
 
-
-// Add class to body if the page is NOT inside an iframe
-// This is to style form pages slightly differently
-// if you are viewing them in a seperate tab
-
-if ( window == window.parent ) 
-{ 
-  console.log("Not iFrame"); 
-  document.body.classList.add("noIframe");
-}
-
-
-
 // File upload widget
 
 var fileName = document.getElementById('selected-file');

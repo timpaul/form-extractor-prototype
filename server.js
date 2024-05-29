@@ -289,6 +289,17 @@ app.get('/forms/:formId/:pageNum/:question', (req, res) => {
   res.render('form.njk');
 })
 
+/* Render popup form pages */
+app.get('/form-popup/:formId/:questionIndex', (req, res) => {
+  const formId = req.params.formId
+  const fileData = loadFileData(formId)
+  const questionIndex = Number(req.params.questionIndex)
+  res.locals.formId = formId
+  res.locals.fileData = fileData
+  res.locals.question = questionIndex
+  res.render('form-popup.njk');
+})
+
 /* Render list pages */
 app.get('/lists/:formId/:pageNum', (req, res) => {
   const formId = req.params.formId 
