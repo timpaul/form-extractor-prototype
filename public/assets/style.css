@@ -7593,7 +7593,7 @@ pre {
 
 .upload-panel .file-upload label {
   position: relative;
-  padding: 60px;
+  padding: 62px;
   margin-bottom: 0;
   background-color: #f3f2f1;
   cursor: pointer;
@@ -7610,7 +7610,7 @@ pre {
   opacity: 0;
 }
 .upload-panel .file-upload label:hover {
-  background-color: #d3d3d3;
+  background-color: #e2e2e2;
 }
 
 .form-list {

@@ -1,19 +1,25 @@
-{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
 {% if fileData.filename %}
-  {% set items = [
-    {
-      text: "Home",
-      href: "/"
-    },
-    {
-      text: fileData.filename
-    }
-  ] %}
+
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/">Home</a>
+    </li>
+
+    <li class="govuk-breadcrumbs__list-item" aria-current="page">{{fileData.filename}}  &nbsp;&nbsp;
+    <a class="govuk-link govuk-link--no-visited-state" href="/delete/{{ formId }}">Delete file</a>
+    </li>
+
 {% else %}
-  {% set items = [
-    {
-      text: "Home"
-    }
-  ] %}
+
+    <li class="govuk-breadcrumbs__list-item">Home</li>
+
 {% endif %}
-{{ govukBreadcrumbs({items: items}) }}
+  </ol>
+</div>
+
+  
+
+  
+

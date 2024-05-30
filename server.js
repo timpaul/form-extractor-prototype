@@ -132,6 +132,20 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
 });
 
 
+// === DELETE PREVIOUSLY PROCESSED FORMS === //
+
+app.get('/delete/:formId', async (req, res) => {
+
+  const formId = req.params.formId
+
+  fs.rmdirSync('./public/results/form-' + formId, { 
+    recursive: true, 
+  }); 
+
+  res.redirect('/');
+
+});
+
 
 // === EXTRACT FORM QUESTIONS FROM IMAGE === //
 
@@ -222,7 +236,7 @@ async function sendToLLM (llm, req, res) {
     var index = 0;
     for(let i = 0; i < pageNum-1; i++){
          index += formJson.formStructure[i];
-    } 
+    }
 
     // Update the pages array
     var index = arraySum(formJson.formStructure, 0, pageNum-1)
