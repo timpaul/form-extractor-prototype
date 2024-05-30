@@ -180,7 +180,7 @@ async function sendToLLM (llm, req, res) {
     // Call OpenAI or Anthropic LLM
     
     if (llm == "OpenAI"){
-      var result = await callOpenAI(image_url, prompt)
+      var result = await callOpenAI(image_data, image_media_type, prompt)
 
     } else if (llm == "Anthropic"){
       var result = await callAnthropic(image_data, image_media_type, prompt)
@@ -216,7 +216,11 @@ async function sendToLLM (llm, req, res) {
 };
 
 
-async function callOpenAI(image_url, prompt) {
+
+// Call Chat GPT!
+async function callOpenAI(image_data, image_media_type, prompt) {
+
+  let img_str = `data:image/jpeg;base64,${image_data}`
 
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -228,7 +232,7 @@ async function callOpenAI(image_url, prompt) {
         content: [
           {
             type: 'image_url',
-            image_url: { "url": image_url }
+            image_url: { "url": img_str }
 
           },
           {
@@ -242,14 +246,13 @@ async function callOpenAI(image_url, prompt) {
   });
 
   let result = JSON.parse(completion.choices[0].message.tool_calls[0].function.arguments);
-  result.imageURL = image_url;
   console.log(result);
 
   return result;
 
 };
 
-
+// Call Claude!
 async function callAnthropic(image_data, image_media_type, prompt) {
 
   const completion = await anthropic.beta.tools.messages.create({
@@ -292,6 +295,8 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     } else if (process.env.OPENAI_API_KEY) {
       var llm = "OpenAI";
     }
+
+    var llm = "OpenAI";
 
     return sendToLLM(llm, req, res)
 
