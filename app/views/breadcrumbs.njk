@@ -1,0 +1,19 @@
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% if fileData.filename %}
+  {% set items = [
+    {
+      text: "Home",
+      href: "/"
+    },
+    {
+      text: fileData.filename
+    }
+  ] %}
+{% else %}
+  {% set items = [
+    {
+      text: "Home"
+    }
+  ] %}
+{% endif %}
+{{ govukBreadcrumbs({items: items}) }}

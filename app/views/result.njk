@@ -1,0 +1,112 @@
+{% extends "govuk/template.njk" %}
+{% set filePages = fileData.formStructure.length %}
+
+{% block head %}
+  <link href="/assets/style.css" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {{ govukHeader({
+    serviceName: "Form extractor prototype",
+    serviceUrl: "#",
+    useTudorCrown: true
+  }) }}
+{% endblock %}
+
+{% block beforeContent %}
+  {% include "breadcrumbs.njk" %}
+{% endblock %}
+
+{% block content %}
+
+  {% from "govuk/components/input/macro.njk" import govukInput %}
+  {% from "govuk/components/button/macro.njk" import govukButton %}
+  {% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+
+  <h2 class="govuk-heading-m">Original file</h2>
+
+  {% include "doc-pagination.njk" %}
+
+  <div class="form-image-container">
+    <img id="formImage" class="form-image" src="/results/form-{{formId}}/page.{{ pageNum }}.jpeg" />
+  </div>
+
+  </div>
+  <div class="govuk-grid-column-one-half">
+
+  <h2 class="govuk-heading-m">Extracted form</h2>
+
+  {% set formHtml %}
+
+  {% if fileData.formStructure[pageNum-1] == 0 %}
+
+   <div class="form-extraction-panel">
+    <h3 class="govuk-heading-s">Page {{pageNum}}</h3>
+
+        {{ govukButton({
+          id: 'extract-form-button',
+          text: "Extract form",
+          href: "/extractForm/" + formId + "/" + pageNum
+        }) }}
+
+    {% include "spinner.njk" %}
+  </div>
+
+  {% else %}
+
+  <iframe class="extracted-form" id="formTabIframe" src="/forms/{{ formId }}/{{ pageNum }}/{{question}}" width="100%" height="648px" scrolling="auto"></iframe>
+
+  {% endif %}
+
+  {% endset -%}
+  {% set listHtml %}
+  <iframe class="extracted-form" id="listTabIframe" src="/lists/{{ formId }}/{{ pageNum }}" width="100%" height="650px" scrolling="auto"></iframe>
+  {% endset -%}
+  {% set jsonHtml %}
+  <iframe class="extracted-form" id="jsonTabIframe" src="/json/{{ formId }}/{{ pageNum }}" width="100%" height="650px" scrolling="auto"></iframe>
+  {% endset -%}
+
+  {{ govukTabs({
+    items: [
+      {
+        label: "Form",
+        id: "form",
+        panel: {
+          html: formHtml
+        }
+      },
+      {
+        label: "List",
+        id: "list",
+        panel: {
+          html: listHtml
+        }
+      },
+      {
+        label: "JSON",
+        id: "json",
+        panel: {
+          html: jsonHtml
+        }
+      }
+    ]
+  }) }}
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script type="module" src="/assets/govuk-frontend.min.js"></script>
+  <script type="module">
+    import { initAll } from '/assets/govuk-frontend.min.js'
+    initAll()
+  </script>  
+  <script src="/assets/scripts.js"></script>
+{% endblock %}

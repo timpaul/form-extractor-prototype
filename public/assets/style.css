@@ -7513,17 +7513,19 @@ pre {
   margin-bottom: 0;
 }
 
-.govuk-button--submit, #spinner {
+.govuk-button--submit {
   display: inline-block;
 }
 
 #spinner {
   width: 30px;
   height: 30px;
-  margin-left: 10px;
-  margin-top: 6px;
-  /* float: right; */
-  display: inline-block;
+  display: none;
+  margin: 0 auto;
+}
+
+#spinner.visible {
+  display: block;
 }
 
 .question {
@@ -7542,17 +7544,109 @@ pre {
 
 .form-image-container {
   border: 1px solid #b1b4b6;
-  min-height: 660px;
+  height: 662px;
+  overflow: auto;
+  margin-top: -5px;
 }
 
 .extracted-form {
   border: 0px;
-  /*margin: -30px -20px -34px;
-  width: calc(100% + 40px);*/
 }
 
 #form, #json, #list {
   padding: 5px 0 1px 5px;
+}
+
+.form-pagination {
+  justify-content: space-between;
+}
+.form-pagination .govuk-pagination__item--current {
+  background-color: transparent;
+  width: 100%;
+  font-weight: normal;
+}
+.form-pagination .govuk-pagination__prev,
+.form-pagination .govuk-pagination__next,
+.form-pagination .govuk-pagination__list {
+  width: 33.33%;
+  font-weight: normal;
+}
+.form-pagination .govuk-pagination__list {
+  text-align: center;
+}
+.form-pagination .govuk-pagination__link[rel=next] {
+  float: right;
+}
+
+.form-extraction-panel {
+  height: 576px;
+  padding: 40px;
+  text-align: center;
+}
+.form-extraction-panel #extract-form-button {
+  width: 40%;
+  line-height: 1.3157894737;
+}
+.form-extraction-panel h3 {
+  margin-top: 55%;
+}
+
+.upload-panel .file-upload label {
+  position: relative;
+  padding: 60px;
+  margin-bottom: 0;
+  background-color: #f3f2f1;
+  cursor: pointer;
+  border: 2px solid #0b0c0c;
+  text-align: center;
+}
+.upload-panel .file-upload input {
+  position: absolute;
+  margin-bottom: 0;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+
+.form-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 15px;
+}
+.form-list a {
+  border: 1px solid #b1b4b6;
+  display: block;
+}
+.form-list a:hover {
+  border: 1px solid #1d70b8;
+}
+.form-list img {
+  width: 100%;
+  max-width: 200px;
+}
+
+.json-wrapper {
+  margin: 25px -13px;
+  padding: 15px 0px;
+  border-top: 1px solid #b1b4b6;
+}
+
+.new-tab #navigation {
+  position: absolute;
+  top: 7px;
+  right: 0;
+  background: #0b0c0c;
+}
+.new-tab .govuk-header__link {
+  font-weight: normal;
+}
+.new-tab .govuk-header__link:hover {
+  text-decoration-thickness: 2px;
+}
+.new-tab .govuk-header__navigation-list[hidden] {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */

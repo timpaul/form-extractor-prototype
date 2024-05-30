@@ -1,13 +1,16 @@
 import 'dotenv/config'
-
 import fs from "fs";
-
 import bodyParser from 'body-parser';
 import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import fetch from 'node-fetch';
+import { fromPath } from "pdf2pic";
+import multer from 'multer';
+
+
+// === SET UP EXPRESS === //
 
 var app = express();
 
@@ -26,10 +29,9 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' assert { type: 'json' };
 import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' assert { type: 'json' };
 
-// get API Key from environment variable ANTHROPIC_API_KEY
-const anthropic = new Anthropic();
-// get API Key from environment variable OPENAI_API_KEY
-const openai = new OpenAI();
+// get API Keys from environment variables 
+const anthropic = new Anthropic();  // ANTHROPIC_API_KEY
+const openai = new OpenAI();        // OPENAI_API_KEY
 
 app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/dist/govuk/assets')))
 
@@ -44,21 +46,109 @@ nunjucks.configure([
   })
 
 app.set('view engine', 'html')
-
 app.use(express.json());
 app.use(express.static('public'));
 
 
+
+// === UPLOAD A FILE === //
+
+// Define a temporary location for uploaded files
+var storage = multer.diskStorage({  
+  destination: function (req, file, cb) { 
+      cb(null, './public/results/')
+  },
+  filename: function (req, file, cb) {
+      cb(null, "form" + path.extname(file.originalname));
+  }
+})
+
+// Define a function for counting files with specific extensions
+function getFilesFromPath(path, extension) {
+    let files = fs.readdirSync( path );
+    return files.filter( file => file.match(new RegExp(`.*\.(${extension})`, 'ig')));
+}
+
+const upload = multer({ storage: storage })
+
+app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
+
+  // Create a result folder to save the file, images and JSON in
+
+  const now = `${Date.now()}`; // Create unique result ID
+  var savePath =  "./public/results/form-" + now;
+  fs.mkdirSync(savePath);
+
+  const filetype = req.file.mimetype;
+  const tempFilePath = './public/results/' + req.file.filename;
+
+  if (filetype == 'image/jpeg') {
+    // Move the JPG file into the result folder
+    fs.renameSync(tempFilePath, savePath + '/page.1.jpeg');
+
+  } else if (filetype == 'application/pdf')  {
+    // Move the PDF file into the result folder
+    fs.renameSync(tempFilePath, savePath + '/form.pdf');
+
+    // Define the PDF-to-image conversion options
+    const options = {
+      density: 300,
+      saveFilename: "page",
+      savePath: savePath,
+      format: "jpeg",
+      width: 600,
+      preserveAspectRatio: true
+    };
+    
+    // Save images of all the pages in the PDF
+    const convert = fromPath(savePath + '/form.pdf', options)
+    await convert.bulk(-1)
+  }
+
+  // Create a JSON file for the PDF
+  const filePages = getFilesFromPath(savePath, ".jpeg").length
+  var formJson = {
+    "filename": req.file.originalname,
+    "formStructure": [],
+    "pages": []
+  }
+
+  // Add an item for each of the pages in the original file
+  for(var i=0; i<filePages; i++){
+    // The formStructure array stores the original structure of the document
+    // Each number in the array is a page of the form
+    // The number represents the number of questions on that page
+    formJson.formStructure.push(0)
+  }
+
+  // Save the JSON in the folder
+  try {
+      fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
+    } catch (err) {
+      console.error(err);
+  }
+
+  res.redirect('/results/form-' + now + "/1");
+
+});
+
+
+
+// === EXTRACT FORM QUESTIONS FROM IMAGE === //
+
 async function sendToLLM (llm, req, res) {
+
+  const formId = req.params.formId 
+  var savePath = "./public/results/form-" + formId
+  const pageNum = Number(req.params.pageNum)
 
   try{
     console.log("Sending data to " + llm);
 
     // Encode the image data into base64  
-    const image_url = req.body.imageURL;
     const image_media_type = "image/jpeg"
-    const image_array_buffer = await ((await fetch(image_url)).arrayBuffer());
-    const image_data = Buffer.from(image_array_buffer).toString('base64');
+    const image = fs.readFileSync(savePath + "/page." + pageNum + ".jpeg")
+    const image_data = Buffer.from(image).toString('base64')
 
     // Create a HTML wrapper for the JSON result to go in
     const jsonWrapper = (content) => `
@@ -93,24 +183,35 @@ async function sendToLLM (llm, req, res) {
       var result = await callOpenAI(image_url, prompt)
 
     } else if (llm == "Anthropic"){
-      var result = await callAnthropic(image_data, image_media_type, image_url, prompt)
+      var result = await callAnthropic(image_data, image_media_type, prompt)
 
     }
 
-    // Write the results into a 'results' folder
-    const now = `${Date.now()}`;
+    // Load the file JSON
 
-    try {
-      fs.writeFileSync('app/data/' + now + '.json', JSON.stringify(result, null, 2));
-    } catch (err) {
-      console.error(err);
-    }
+    const formJson = loadFileData(formId);
 
-    res.redirect('/results/' + now);
+    // Calculate index to insert extracted questions into the pages array
+    var index = 0;
+    for(let i = 0; i < pageNum-1; i++){
+         index += formJson.formStructure[i];
+    } 
 
-  } catch (error) {
-    console.error('Error calling LLM: ', error);
-    return res.status(500).send('Error calling LLM');
+    // Update the pages array
+    var index = arraySum(formJson.formStructure, 0, pageNum-1)
+    formJson.pages.splice(index, 0, ...result.pages);
+
+    // Update the formStructure array
+    formJson.formStructure.splice(pageNum-1,1,result.pages.length);
+
+    // Save the updated file JSON
+    fs.writeFileSync(savePath + '/form.json', JSON.stringify(formJson, null, 2));
+
+    res.redirect('/results/form-' + formId + '/' + pageNum);
+
+      } catch(error) {
+    console.error('Error in Claude API call:', error);
+    return res.status(500).send('Error processing the request');
   }
 };
 
@@ -149,7 +250,7 @@ async function callOpenAI(image_url, prompt) {
 };
 
 
-async function callAnthropic(image_data, image_media_type, image_url, prompt) {
+async function callAnthropic(image_data, image_media_type, prompt) {
 
   const completion = await anthropic.beta.tools.messages.create({
     model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
@@ -176,7 +277,6 @@ async function callAnthropic(image_data, image_media_type, image_url, prompt) {
   });
 
   let result = completion.content[1].input;
-  result.imageURL = image_url;
   console.log(result);
   
   return result;
@@ -185,16 +285,20 @@ async function callAnthropic(image_data, image_media_type, image_url, prompt) {
 
 
 
-app.post('/sendToLLM', async (req, res) => {
+app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
 
-  if (process.env.ANTHROPIC_API_KEY) {
-    var llm = "Anthropic";
-  } else if (process.env.OPENAI_API_KEY) {
-    var llm = "OpenAI";
-  }
-  return sendToLLM(llm, req, res)
+    if (process.env.ANTHROPIC_API_KEY) {
+      var llm = "Anthropic";
+    } else if (process.env.OPENAI_API_KEY) {
+      var llm = "OpenAI";
+    }
+
+    return sendToLLM(llm, req, res)
 
 });
+
+
+
 
 // THE WEB PAGES
 
@@ -202,67 +306,87 @@ const port = 3000;
 
 /* Render query page */
 app.get('/', (req, res) => {
-  res.render('index.html')
+  const formList = fs.readdirSync('./public/results').filter((item) => item.startsWith("form-"));
+  res.locals.formList = formList;
+  res.render('index.njk')
 })
 
-/* Render loading page */
-app.get('/loading.html', (req, res) => {
-  res.render('loading.html')
-})
 
-// load form data
 
-function loadFormData(formId) {
+/* Sum the items between two indexes in a numerical array */
+function arraySum(array, start, end){
+    var sum = 0;
+    for(let i = start; i < end; i++){
+         sum += array[i];
+    } 
+    return sum;
+}
+
+/* Load file data  */
+
+function loadFileData(formId){
   try {
-    return JSON.parse(fs.readFileSync('./app/data/' + formId + '.json'))
+    return JSON.parse(fs.readFileSync('./public/results/form-'+formId+'/form.json'))
   } catch (err) {
-    console.error(err)
+    return err
   }
 }
 
-/* Render form pages */
-app.get('/forms/:formId/:question', (req, res) => {
-  const formId = req.params.formId
-  const question = Number(req.params.question)
-  const formData = loadFormData(formId)
-  res.locals.formData = formData
-  res.locals.question = question
+
+/* Render results pages */
+app.get('/results/form-:formId/:pageNum/:question?', (req, res) => {
+  const formId = req.params.formId 
+  const pageNum = Number(req.params.pageNum) 
+  const question = req.params.question ? Number(req.params.question) : 1
+  const fileData = loadFileData(formId)
   res.locals.formId = formId
+  res.locals.pageNum = pageNum
+  res.locals.question = question
+  res.locals.fileData = fileData
+  res.render('result.njk')
+})
+
+/* Render form pages */
+app.get('/forms/:formId/:pageNum/:question', (req, res) => {
+  const formId = req.params.formId
+  const fileData = loadFileData(formId)
+  const pageNum = Number(req.params.pageNum)
+  const question = Number(req.params.question)
+  res.locals.formId = formId
+  res.locals.fileData = fileData
+  res.locals.pageNum = pageNum
+  res.locals.question = question
+  res.locals.questionIndex = arraySum(fileData.formStructure, 0, pageNum-1) + question -1
   res.render('form.njk');
 })
 
-/* Render check-answers pages */
-app.get('/check-answers/:formId', (req, res) => {
+
+/* Render popup form pages */
+app.get('/form-popup/:formId/:questionIndex', (req, res) => {
   const formId = req.params.formId
-  const formData = loadFormData(formId)
-  res.locals.formData = formData
+  const fileData = loadFileData(formId)
+  const questionIndex = Number(req.params.questionIndex)
   res.locals.formId = formId
-  res.render('check-answers.njk')
+  res.locals.fileData = fileData
+  res.locals.question = questionIndex
+  res.render('form-popup.njk');
 })
 
 /* Render list pages */
-app.get('/lists/:formId', (req, res) => {
-  const formId = req.params.formId
-  const formData = loadFormData(formId)
-  res.locals.formData = formData
+app.get('/lists/:formId/:pageNum', (req, res) => {
+  const formId = req.params.formId 
+  const fileData = loadFileData(formId)
+  res.locals.fileData = fileData
   res.render('list.njk')
 })
 
 /* Render JSON pages */
-app.get('/json/:formId', (req, res) => {
-  const formId = req.params.formId
-  let formData = loadFormData(formId)
-  formData = JSON.stringify(formData, null, 2);
-  res.locals.formData = formData
-  res.render('json.njk')
-})
-
-app.get('/results/:formId', (req, res) => {
-  const formId = req.params.formId
-  const formData = loadFormData(formId)
+app.get('/json/:formId/:pageNum', (req, res) => {  
+  const formId = req.params.formId 
+  const fileData = loadFileData(formId)
   res.locals.formId = formId
-  res.locals.formData = formData
-  res.render('result')
+  res.locals.fileData = fileData
+  res.render('json.njk')
 })
 
 app.listen(port, () => {
