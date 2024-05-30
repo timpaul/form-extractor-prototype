@@ -7609,6 +7609,9 @@ pre {
   width: 100%;
   opacity: 0;
 }
+.upload-panel .file-upload label:hover {
+  background-color: #d3d3d3;
+}
 
 .form-list {
   display: grid;

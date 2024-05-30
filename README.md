@@ -66,7 +66,7 @@ Other Nunjucks page templates and macros are in [app/views](https://github.com/t
 
 Additional CSS styles are in [assets/style.scss](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/style.scss).
 
-Generate updates to the CSS with `sass /assets/style.scss public/assets/style.css`.
+Generate updates to the CSS with `sass assets/style.scss public/assets/style.css`.
 
 The script in [public/assets/scripts.js](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/scripts.js) enhances file upload and adds loading spinners.
 
