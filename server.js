@@ -389,6 +389,7 @@ app.get('/forms/:formId/:pageNum/:question/check-answers', (req, res) => {
   const pageNum = req.params.pageNum
   const question = req.params.question
   const fileData = loadFileData(formId)
+  res.locals.formId = formId
   res.locals.fileData = fileData
   res.locals.pageNum = pageNum
   res.locals.question = question
