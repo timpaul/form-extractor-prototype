@@ -10,10 +10,12 @@
 {% block content %}
 
   <div class="questions">
-    {% for question in formData.pages %}
+    {% for question in fileData.pages %}
     <div class="question">
-      <span class="govuk-caption-m">Question {{question.id}}</span>
+      <span class="govuk-caption-m">Question {{loop.index}}</span>
       <h3 class="govuk-heading-m">{{question.question_text}}</h3>
+
+      <p class="govuk-body">ID: {{question.id}}</p>
       <p class="govuk-body">Hint: {{question.hint_text}}</p>
       <p class="govuk-body">Type: {{question.answer_type}}</p>
       <p class="govuk-body">Settings: {{question.answer_settings.input_type}}</p>

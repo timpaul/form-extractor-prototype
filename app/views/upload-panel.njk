@@ -1,0 +1,25 @@
+
+  {% from "govuk/components/button/macro.njk" import govukButton %}
+  <div class="upload-panel govuk-!-margin-bottom-6" >
+  <form action="/uploadFile" id="file-upload" method="post" name="file-upload" enctype="multipart/form-data" novalidate>
+ 
+        <div class="govuk-form-group file-upload">
+          <label class="govuk-label" for="pdfUpload">
+            <span id="selected-file">
+            Click, or drag a PDF or JPG here
+            </span>
+            <input style="cursor:pointer" class="govuk-file-upload" aria-describedby="selected-file" id="fileUpload" name="fileUpload" type="file" accept=".pdf, .jpg">
+          </label>
+        </div>
+
+        <div class="govuk-button-group">
+        {{ govukButton({
+          id: 'file-upload-button',
+          text: "Upload file",
+          classes: "govuk-!-margin-bottom-0"
+        }) }}
+        </div>
+
+  </form>
+</div>
+  

@@ -1,8 +1,10 @@
 # Form Extractor Prototype
 
-This tool extracts the structure from an image of a form.
+This tool extracts the structure from a PDF or image of a form.
 
-It uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
+By default it uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
+
+But it can also use the OpenAI LLM.
 
 A single extraction of an A4 form page costs about 10p.
 
@@ -18,20 +20,27 @@ You'll notice that it doesn't try to faithfully replicate every field in a quest
 Instead, it uses the relevant components and patterns from the [GOV.UK Design System](https://design-system.service.gov.uk/).
 This is a feature not a bug ;-)
 
-## Run locally
+## Install
 
-You'll need an [Anthropic API key](https://www.anthropic.com/api).
+You'll need either an [Anthropic API key](https://www.anthropic.com/api), or an [Open AI one](https://openai.com/index/openai-api/).
 
-Add the key as a local environment variable called `ANTHROPIC_API_KEY`.
+Add the key as a local environment variable called `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY`.
 
 Install the app locally with `npm install`.
 
-Start the app with `npm start`.
+You'll also need to install GraphicsMagick. It's used to convert PDF pages into images.
+
+[There's a guide for doing that here](https://github.com/yakovmeister/pdf2image/blob/HEAD/docs/gm-installation.md).
+
+## Run
+
+Start the app locally with `npm start dev`.
 
 It'll be available at http://localhost:3000/
 
 ## Current capabilities
 
+- processing PDF forms or images of forms
 - breaking a form down into questions
 - distinguishing between question, hint and field text
 - distinguishing between single-choice and multiple-choice questions
@@ -39,13 +48,12 @@ It'll be available at http://localhost:3000/
 - recognising when an image isn't a form
 - recognising when a question has conditional routing
 - processing hand drawn forms
+- browsing previously processed forms
 
 ## Current limitations
 
-- it can only process jpg images of forms, not documents
 - it only knows about certain kinds of question types
 - you can't provide your own API key via the UI
-- you can't browse previous form extractions
 - like a lot of Gen AI, it can be unpredictable
 
 ## How it works
@@ -56,21 +64,23 @@ The main UI is in [app/views/index.html](https://github.com/timpaul/form-extract
 
 Other Nunjucks page templates and macros are in [app/views](https://github.com/timpaul/form-extractor-prototype/tree/main/app/views).
 
-Additional CSS styles are in [public/assets/style.css](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/style.scss).
+Additional CSS styles are in [assets/style.scss](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/style.scss).
 
-The script in [public/assets/scripts.js](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/scripts.js) handles the image preview and loading spinner.
+Generate updates to the CSS with `sass assets/style.scss public/assets/style.css`.
 
-The form in [index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html) sends the image at the URL provided by the user to the Claude API. 
+The script in [public/assets/scripts.js](https://github.com/timpaul/form-extractor-prototype/blob/main/assets/scripts.js) enhances file upload and adds loading spinners.
 
-It does this via the 'SendToClaude' function in [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
+The form in [index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html) uploads the file to the server.
 
-The function makes use of the 'tools' feature of Claude.
+If it's a PDF it uses GraphicsMagick to convert the pages into image files.
 
-That allows you to specify a JSON schema that you'd like it's response to conform to.
+Form files are stored in subfolders in [public/results](https://github.com/timpaul/form-extractor-prototype/blob/main/public/results).
 
-The JSON schema is specified in [data/extract-form-questions.json](https://github.com/timpaul/form-extractor-prototype/blob/main/data/extract-form-questions.json).
+The images are sent to an LLM, along with a prompt and JSON schema, via the 'SendToLLM' function in [server.js](https://github.com/timpaul/form-extractor-prototype/blob/main/server.js).
 
-The results are saved as JSON files in [app/data/](https://github.com/timpaul/form-extractor-prototype/tree/main/app/data).
+The JSON schema for each LLM is specified in [data/](https://github.com/timpaul/form-extractor-prototype/blob/main/data/).
+
+The results are saved as a JSON files in the subfolders in [public/results](https://github.com/timpaul/form-extractor-prototype/blob/main/public/results).
 
 Those files are used to generate the pages that are loaded into iframes in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
 

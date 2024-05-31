@@ -1,7 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% import "answer-types.njk" as answerType %}
 
-{% set questionJson = fileData.pages[questionIndex] %}
+{% set questionJson = fileData.pages[question-1] %}
 
 {% block head %}
   <link href="/assets/style.css" rel="stylesheet">
@@ -10,15 +10,7 @@
 {% block header %}
 
     {{ govukHeader({
-      useTudorCrown: true,
-      navigationClasses: "new-tab",
-      navigation: [{
-        text: "Open in new tab",
-        href: "/form-popup/" + formId + "/" + (questionIndex+1),
-        attributes:{
-          target: "_blank"
-        }
-      }]
+      useTudorCrown: true
     }) }}
 
 {% endblock %}
@@ -29,16 +21,7 @@
 
 {% block beforeContent %}
 
-  {% if questionJson.needs_routing == true %}
-    {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-    {{ govukNotificationBanner({
-      text: "It looks like this page needs conditional routing. Check the original form.",
-      classes: "govuk-!-margin-top-2"
-    }) }}
-  {% endif %}
-
-
-  {% if pageNum > 0 and question > 1 %}
+  {% if question > 1 %}
 
     {{ govukBackLink({
       text: "Back",
@@ -47,18 +30,6 @@
 
   {% endif %}
 
-  {% if pageNum > 1 and question == 1 %}
-
-  {% set lastQuestion = fileData.formStructure[pageNum-2] %}
-
-    {{ govukBackLink({
-      text: "Back",
-      href: "/results/form-" + formId + "/" + (pageNum - 1) + "/" + lastQuestion,
-      attributes:{
-          target: "_top"
-        }
-    }) }}
-  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -66,7 +37,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
   
-      <span class="govuk-caption-m">Question {{questionIndex+1}}</span>
+      <span class="govuk-caption-m">Question {{question}}</span>
 
       
       {% if questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
@@ -114,25 +85,19 @@
         </h1>
         <p class="govuk-body">{{questionJson.hint_text}}</p>
       {% endif %}
+  
 
-      
-      {% if fileData.pages.length == question %}
-        {{ govukButton({
-          text: "Continue",
-          href: "/forms/" + formId + "/" + pageNum + "/" + question + "/check-answers"
-        }) }}
-      {% elif fileData.formStructure[pageNum-1] == question %}
-        {{ govukButton({
-          text: "Continue",
-          href: "/results/form-" + formId + "/" + (pageNum + 1),
-          attributes: {target: "_top"}
-        }) }}
-      {% else %}
-        {{ govukButton({
-          text: "Continue",
-          href: question + 1
-        }) }}        
-      {% endif %}
+        {% if fileData.pages.length == question %}
+          {{ govukButton({
+            text: "Continue",
+            href: "/form-popup/" + formId + "/" + question + "/check-answers"
+          }) }}
+        {% else %}
+          {{ govukButton({
+            text: "Continue",
+            href: question + 1
+          }) }}        
+        {% endif %} 
 
   </div>
 </div>
