@@ -21,16 +21,7 @@
 
 {% block beforeContent %}
 
-  {% if questionJson.needs_routing == true %}
-    {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-    {{ govukNotificationBanner({
-      text: "It looks like this page needs conditional routing. Check the original form.",
-      classes: "govuk-!-margin-top-2"
-    }) }}
-  {% endif %}
-
-
-  {% if question > 0 %}
+  {% if question > 1 %}
 
     {{ govukBackLink({
       text: "Back",
@@ -94,11 +85,19 @@
         </h1>
         <p class="govuk-body">{{questionJson.hint_text}}</p>
       {% endif %}
+  
 
-        {{ govukButton({
-          text: "Continue",
-          href: question + 1
-        }) }}     
+        {% if fileData.pages.length == question %}
+          {{ govukButton({
+            text: "Continue",
+            href: "/form-popup/" + formId + "/" + question + "/check-answers"
+          }) }}
+        {% else %}
+          {{ govukButton({
+            text: "Continue",
+            href: question + 1
+          }) }}        
+        {% endif %} 
 
   </div>
 </div>

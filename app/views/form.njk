@@ -115,7 +115,13 @@
         <p class="govuk-body">{{questionJson.hint_text}}</p>
       {% endif %}
 
-      {% if fileData.formStructure[pageNum-1] == question %}
+      
+      {% if fileData.pages.length == question %}
+        {{ govukButton({
+          text: "Continue",
+          href: "/forms/" + formId + "/" + pageNum + "/" + question + "/check-answers"
+        }) }}
+      {% elif fileData.formStructure[pageNum-1] == question %}
         {{ govukButton({
           text: "Continue",
           href: "/results/form-" + formId + "/" + (pageNum + 1),

@@ -372,6 +372,29 @@ app.get('/results/form-:formId/:pageNum/:question?', (req, res) => {
   res.render('result.njk')
 })
 
+/* Render pop-up check-answers pages */
+app.get('/form-popup/:formId/:question/check-answers', (req, res) => {
+  const formId = req.params.formId
+  const question = req.params.question
+  const fileData = loadFileData(formId)
+  res.locals.formId = formId
+  res.locals.fileData = fileData
+  res.locals.question = question
+  res.render('check-answers-popup.njk')
+})
+
+/* Render check-answers pages */
+app.get('/forms/:formId/:pageNum/:question/check-answers', (req, res) => {
+  const formId = req.params.formId
+  const pageNum = req.params.pageNum
+  const question = req.params.question
+  const fileData = loadFileData(formId)
+  res.locals.fileData = fileData
+  res.locals.pageNum = pageNum
+  res.locals.question = question
+  res.render('check-answers.njk')
+})
+
 /* Render form pages */
 app.get('/forms/:formId/:pageNum/:question', (req, res) => {
   const formId = req.params.formId
@@ -390,12 +413,15 @@ app.get('/forms/:formId/:pageNum/:question', (req, res) => {
 app.get('/form-popup/:formId/:questionIndex', (req, res) => {
   const formId = req.params.formId
   const fileData = loadFileData(formId)
+  const pageNum = Number(req.params.pageNum)
   const questionIndex = Number(req.params.questionIndex)
   res.locals.formId = formId
   res.locals.fileData = fileData
+  res.locals.pageNum = Number(req.params.pageNum)
   res.locals.question = questionIndex
   res.render('form-popup.njk');
 })
+
 
 /* Render list pages */
 app.get('/lists/:formId/:pageNum', (req, res) => {
