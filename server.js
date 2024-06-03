@@ -8,6 +8,7 @@ import OpenAI from 'openai';
 import fetch from 'node-fetch';
 import { fromPath } from "pdf2pic";
 import multer from 'multer';
+import { performance } from 'perf_hooks';
 
 
 // === SET UP EXPRESS === //
@@ -96,6 +97,8 @@ app.post('/uploadFile', upload.single('fileUpload'), async (req, res) => {
     console.log("Saving images of PDF pages...");
     await convert.bulk(-1)
   }
+
+  console.log("Saved");
 
   // Create a JSON file for the PDF
 
@@ -220,6 +223,9 @@ async function sendToLLM (llm, req, res) {
 
     // Call OpenAI or Anthropic LLM
     
+
+    var startTime = performance.now()
+
     if (llm == "OpenAI"){
       var result = await callOpenAI(image_data, image_media_type, prompt)
 
@@ -227,6 +233,10 @@ async function sendToLLM (llm, req, res) {
       var result = await callAnthropic(image_data, image_media_type, prompt)
 
     }
+
+    var endTime = performance.now()
+
+    console.log(`Process took ${((endTime - startTime)/1000).toFixed(2)} seconds`)
 
     // Load the file JSON
 
