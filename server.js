@@ -174,6 +174,8 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     var llm = "OpenAI";
   }
 
+  //var llm = "OpenAI"
+
   return sendToLLM(llm, req, res)
 
 });
@@ -261,7 +263,7 @@ async function sendToLLM (llm, req, res) {
     res.redirect('/results/form-' + formId + '/' + pageNum);
 
       } catch(error) {
-    console.error('Error in Claude API call:', error);
+    console.error('Error in API call:', error);
     return res.status(500).send('Error processing the request');
   }
 };
