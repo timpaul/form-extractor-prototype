@@ -5,6 +5,7 @@
       "description": "Extract the questions from an image of a form. If the image is not a form, explain this in the 'alert' property.",
       "parameters": {
           "type": "object",
+          "required": ["pages"],
           "properties": {
               "alert": {
                   "type": "string",
@@ -26,7 +27,11 @@
                           },
                           "hint_text": {
                               "type": "string",
-                              "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. Use 'null' if there is no hint text"
+                              "description": "Any hint text associated with the question. It often appears immediately below the question title, in a smaller or lighter font. An example of hint text is 'Tick the box or boxes that apply"
+                          },
+                          "needs_routing": {
+                              "type": "boolean",
+                              "description": "True if any part of the question contains text like 'Go to page...' or 'Go to question...'"
                           },
                           "answer_type": {
                               "type": "string",
