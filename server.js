@@ -174,7 +174,7 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     var llm = "OpenAI";
   }
 
-  //var llm = "OpenAI"
+  var llm = "OpenAI"
 
   return sendToLLM(llm, req, res)
 
