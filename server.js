@@ -154,8 +154,8 @@ app.get('/delete/:formId', async (req, res) => {
 
 
 // Load schemas to use for Anthropic and OpenAI
-import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' assert { type: 'json' };
-import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' assert { type: 'json' };
+import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' with { type: 'json' };
+import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' with { type: 'json' };
 
 // get API Keys from environment variables 
 const anthropic = new Anthropic();  // ANTHROPIC_API_KEY
