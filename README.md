@@ -2,9 +2,9 @@
 
 This tool extracts the structure from a PDF or image of a form.
 
-By default it uses the [Claude 3 LLM](https://claude.ai) model by Anthropic.
+By default it uses the gpt-4o model by OpenAI.
 
-But it can also use the OpenAI LLM.
+But it can also use the Claude 3 LLM.
 
 A single extraction of an A4 form page costs about 10p.
 
