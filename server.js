@@ -5,6 +5,13 @@ import express from 'express';
 import nunjucks from 'nunjucks';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import {
+  GoogleGenAI,
+  createUserContent,
+  createPartFromUri,
+  Type
+} from "@google/genai";
+//import { GoogleGenerativeAI } from "@google/generative-ai";
 import fetch from 'node-fetch';
 import { fromPath } from "pdf2pic";
 import multer from 'multer';
@@ -153,13 +160,17 @@ app.get('/delete/:formId', async (req, res) => {
 // === EXTRACT FORM QUESTIONS FROM IMAGE === //
 
 
-// Load schemas to use for Anthropic and OpenAI
+// Load schemas to use for function calling
 import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' with { type: 'json' };
 import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' with { type: 'json' };
+import extractFormQuestionsGoogle from './data/extract-form-questions-google.json' with { type: 'json' };
 
 // get API Keys from environment variables 
 const anthropic = new Anthropic();  // ANTHROPIC_API_KEY
 const openai = new OpenAI();        // OPENAI_API_KEY
+//const google = new GoogleGenAI();   // GEMINI_API_KEY
+const google = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+//const google = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // Define GET route for form extraction
 
@@ -174,7 +185,7 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     var llm = "OpenAI";
   }
 
-  //var llm = "OpenAI"
+  var llm = "Google"
 
   return sendToLLM(llm, req, res)
 
@@ -223,7 +234,7 @@ async function sendToLLM (llm, req, res) {
       "If there is no output, explain why."
     ].join();
 
-    // Call OpenAI or Anthropic LLM
+    // Call ChatGPT, Gemini or Claude
     
 
     var startTime = performance.now()
@@ -234,6 +245,8 @@ async function sendToLLM (llm, req, res) {
     } else if (llm == "Anthropic"){
       var result = await callAnthropic(image_data, image_media_type, prompt)
 
+    } else if (llm == "Google"){
+      var result = await callGoogle(image_data, image_media_type, prompt)
     }
 
     var endTime = performance.now()
@@ -336,6 +349,34 @@ async function callAnthropic(image_data, image_media_type, prompt) {
   console.log(result);
   
   return result;
+
+};
+
+// FUNCTION: Call Gemini!
+async function callGoogle(image_data, image_media_type, prompt) {
+
+  const completion = await google.models.generateContent({
+    model: "gemini-2.0-flash",
+    config: {
+      maxOutputTokens: 2048,
+      temperature: 0.0, // Low temp keeps the results more consistent
+      responseMimeType: 'application/json',
+      responseSchema: extractFormQuestionsGoogle
+    },
+    contents: [
+        prompt,
+        { 
+          inlineData: {
+            data: image_data,
+            mimeType: image_media_type
+          }
+        }
+      ]});
+ 
+  let result = completion.text
+  console.log(result);
+  
+  return JSON.parse(result);
 
 };
 
