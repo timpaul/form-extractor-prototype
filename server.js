@@ -174,7 +174,7 @@ app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
     var llm = "OpenAI";
   }
 
-  var llm = "OpenAI"
+  //var llm = "OpenAI"
 
   return sendToLLM(llm, req, res)
 
@@ -276,7 +276,7 @@ async function callOpenAI(image_data, image_media_type, prompt) {
   let img_str = `data:image/jpeg;base64,${image_data}`
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: 'gpt-4o-mini',
     temperature: 0.0,
     max_tokens: 2048,
     messages: [
@@ -309,7 +309,7 @@ async function callOpenAI(image_data, image_media_type, prompt) {
 async function callAnthropic(image_data, image_media_type, prompt) {
 
   const completion = await anthropic.beta.tools.messages.create({
-    model: 'claude-3-opus-20240229', // The 2 smaller models generate API errors
+    model: 'claude-3-5-sonnet-latest', // The 2 smaller models generate API errors
     temperature: 0.0, // Low temp keeps the results more consistent
     max_tokens: 2048,
     tools: [extractFormQuestionsAnthropic],
