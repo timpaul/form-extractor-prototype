@@ -159,36 +159,19 @@ app.get('/delete/:formId', async (req, res) => {
 
 // === EXTRACT FORM QUESTIONS FROM IMAGE === //
 
-
 // Load schemas to use for function calling
-import extractFormQuestionsAnthropic from './data/extract-form-questions-anthropic.json' with { type: 'json' };
-import extractFormQuestionsOpenAI from './data/extract-form-questions-openai.json' with { type: 'json' };
-import extractFormQuestionsGoogle from './data/extract-form-questions-google.json' with { type: 'json' };
+import extractFormQuestionsSchema from './data/extract-form-questions-schema.json' with { type: 'json' };
 
 // get API Keys from environment variables 
-const anthropic = new Anthropic();  // ANTHROPIC_API_KEY
-const openai = new OpenAI();        // OPENAI_API_KEY
-//const google = new GoogleGenAI();   // GEMINI_API_KEY
+const anthropic = new Anthropic();  
+const openai = new OpenAI();        
 const google = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-//const google = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // Define GET route for form extraction
 
 app.get('/extractForm/:formId/:pageNum/', async (req, res) => {
-
-  // If Anthropic API Key exists, use that
-  // Otherwise use an OpenAI API Key
-
-  if (process.env.ANTHROPIC_API_KEY) {
-    var llm = "Anthropic";
-  } else if (process.env.OPENAI_API_KEY) {
-    var llm = "OpenAI";
-  }
-
-  var llm = "Google"
-
+  var llm = "Google" // Set to "Google", "Anthropic" or "OpenAI"
   return sendToLLM(llm, req, res)
-
 });
 
 // FUNCTION: Call an LLM and send it an image, schema and prompt
@@ -283,7 +266,7 @@ async function sendToLLM (llm, req, res) {
 
 
 
-// FUNCTION: Call Chat GPT!
+// FUNCTION: Call Chat GPT
 async function callOpenAI(image_data, image_media_type, prompt) {
 
   let img_str = `data:image/jpeg;base64,${image_data}`
@@ -292,6 +275,14 @@ async function callOpenAI(image_data, image_media_type, prompt) {
     model: 'gpt-4o-mini',
     temperature: 0.0,
     max_tokens: 2048,
+    tools: [{
+      "type": "function",
+      "function": {
+        "name": "extract_form_questions",
+        "description": "Extract the questions from an image of a form. If the image is not a form, explain this in the 'alert' property.",
+        "parameters": extractFormQuestionsSchema
+      }
+    }],
     messages: [
       {
         role: 'user',
@@ -307,8 +298,7 @@ async function callOpenAI(image_data, image_media_type, prompt) {
           },
         ],
       },
-    ],
-    tools: [extractFormQuestionsOpenAI]
+    ]
   });
 
   let result = JSON.parse(completion.choices[0].message.tool_calls[0].function.arguments);
@@ -318,14 +308,18 @@ async function callOpenAI(image_data, image_media_type, prompt) {
 
 };
 
-// FUNCTION: Call Claude!
+// FUNCTION: Call Claude
 async function callAnthropic(image_data, image_media_type, prompt) {
 
   const completion = await anthropic.beta.tools.messages.create({
     model: 'claude-3-5-sonnet-latest', // The 2 smaller models generate API errors
     temperature: 0.0, // Low temp keeps the results more consistent
     max_tokens: 2048,
-    tools: [extractFormQuestionsAnthropic],
+    tools: [{
+      "name": "extract_form_questions",
+      "description": "Extract the questions from an image of a form. If the image is not a form, explain this in the 'alert' property.",
+      "input_schema": extractFormQuestionsSchema
+    }],
     messages: [{
       "role": "user",
       "content": [
@@ -361,7 +355,7 @@ async function callGoogle(image_data, image_media_type, prompt) {
       maxOutputTokens: 2048,
       temperature: 0.0, // Low temp keeps the results more consistent
       responseMimeType: 'application/json',
-      responseSchema: extractFormQuestionsGoogle
+      responseSchema: extractFormQuestionsSchema
     },
     contents: [
         prompt,
