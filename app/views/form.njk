@@ -68,8 +68,11 @@
   
       <span class="govuk-caption-m">Question {{questionIndex+1}}</span>
 
+      {% if questionJson.answer_type == "information_page" %}
+        {{ answerType.information(questionJson.information) }}
+
       
-      {% if questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
+      {% elif questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
         {{ answerType.date_of_birth(questionJson.question_text, questionJson.hint_text) }}
 
       {% elif questionJson.answer_settings.input_type == "uk_address" %}

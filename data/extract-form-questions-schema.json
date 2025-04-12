@@ -4,7 +4,7 @@
       "properties": {
           "alert": {
               "type": "string",
-              "description": "Any message text returned by Claude, for example if it doesn't detect any questions."
+              "description": "Any message text returned by Claude."
             },
           "pages": {
               "type": "array",
@@ -31,8 +31,8 @@
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of question being asked, based on the fields. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
-                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question"]
+                      "description": "The type of question being asked, based on the fields. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question. If there are no form fields, it's not a question it's an information page.",
+                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question", "information_page"]
                   },
                   "answer_settings": {
                       "type": "object",
@@ -43,6 +43,10 @@
                           "enum": ["date_of_birth", "other_date", "full_name", "uk_address", "international_address"]
                         }
                       }
+                  },
+                  "information": {
+                      "type": "string",
+                      "description": "If the answer_type is information_page, return the contents of the page in markdown format here" 
                   },
                   "options": {
                     "type": "array",

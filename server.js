@@ -11,7 +11,6 @@ import {
   createPartFromUri,
   Type
 } from "@google/genai";
-//import { GoogleGenerativeAI } from "@google/generative-ai";
 import fetch from 'node-fetch';
 import { fromPath } from "pdf2pic";
 import multer from 'multer';
@@ -209,11 +208,20 @@ async function sendToLLM (llm, req, res) {
     `;
 
     // Create the prompt to send with the image and the tool
+    /*
     const prompt = [
       "Is this a form?",
       "It's only a form if it contains form field boxes.",
       "Hand drawn forms, questionnaires and surveys are all valid forms.",
       "If it is a form, extract the questions from it using the extract_form_questions tool.",
+      "If there is no output, explain why."
+    ].join();
+    */
+
+    const prompt = [
+      "Examine this image of a page from a document",
+      "Use the extract_form_questions tool to extract the contents of the page.",
+      "The tool is designed to help you extract forms, but also works with non-form information.",
       "If there is no output, explain why."
     ].join();
 
