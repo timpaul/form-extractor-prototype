@@ -66,59 +66,68 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
   
-      <span class="govuk-caption-m">Question {{questionIndex+1}}</span>
-
       {% if questionJson.answer_type == "information_page" %}
-        {{ answerType.information(questionJson.information) }}
 
-      
-      {% elif questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
-        {{ answerType.date_of_birth(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_settings.input_type == "uk_address" %}
-        {{ answerType.address(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "date" %}
-        {{ answerType.other_date(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "name" %}
-        {{ answerType.name(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "number" %}
-        {{ answerType.number(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "email" %}
-        {{ answerType.email(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "text" %}
-        {{ answerType.text(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "national_insurance_number" %}
-        {{ answerType.national_insurance_number(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "phone_number" %}
-        {{ answerType.phone_number(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "organisation_name" %}
-        {{ answerType.organisation_name(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "address" %}
-        {{ answerType.address(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "yes_no_question" %}
-        {{ answerType.yes_no(questionJson.question_text, questionJson.hint_text) }}
-
-      {% elif questionJson.answer_type == "single_choice" %}
-        {{ answerType.single_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
-
-      {% elif questionJson.answer_type == "multiple_choice" %}
-        {{ answerType.multiple_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
+      <h1 class="govuk-heading-l">{{ questionJson.question_text }}</h1>
+      <div class="markdown">
+        {% markdown %}
+          {{ questionJson.information }}
+        {% endmarkdown %}
+      </div>
 
       {% else %}
-        <h1 class="govuk-heading-l">
-          {{questionJson.question_text}}
-        </h1>
-        <p class="govuk-body">{{questionJson.hint_text}}</p>
+
+        <span class="govuk-caption-m">Question {{questionIndex+1}}</span>
+      
+        {% if questionJson.answer_type == "date" and questionJson.answer_settings.input_type == "date_of_birth" %}
+          {{ answerType.date_of_birth(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_settings.input_type == "uk_address" %}
+          {{ answerType.address(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "date" %}
+          {{ answerType.other_date(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "name" %}
+          {{ answerType.name(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "number" %}
+          {{ answerType.number(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "email" %}
+          {{ answerType.email(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "text" %}
+          {{ answerType.text(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "national_insurance_number" %}
+          {{ answerType.national_insurance_number(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "phone_number" %}
+          {{ answerType.phone_number(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "organisation_name" %}
+          {{ answerType.organisation_name(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "address" %}
+          {{ answerType.address(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "yes_no_question" %}
+          {{ answerType.yes_no(questionJson.question_text, questionJson.hint_text) }}
+
+        {% elif questionJson.answer_type == "single_choice" %}
+          {{ answerType.single_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
+
+        {% elif questionJson.answer_type == "multiple_choice" %}
+          {{ answerType.multiple_choice(questionJson.question_text, questionJson.hint_text, questionJson.options) }}
+
+        {% else %}
+          <h1 class="govuk-heading-l">
+            {{questionJson.question_text}}
+          </h1>
+          <p class="govuk-body">{{questionJson.hint_text}}</p>
+        {% endif %}
+
       {% endif %}
 
       

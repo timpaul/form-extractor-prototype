@@ -1,5 +1,7 @@
 @import "../node_modules/govuk-frontend/dist/govuk/all";
 
+$govuk-global-styles: true;
+
 .app-example__code {
 	position: relative;
 	font-family: "GDS Transport",arial,sans-serif;
@@ -192,5 +194,15 @@ pre {
 	}
 	.govuk-header__navigation-list[hidden]{
 		display: block;
+	}
+}
+
+
+.markdown{
+	p, li{
+		@include govuk-typography-common;
+	}
+	a{
+		@include govuk-link-common;
 	}
 }

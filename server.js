@@ -17,6 +17,13 @@ import multer from 'multer';
 import { performance } from 'perf_hooks';
 
 
+import { marked } from 'marked';
+import markdown from 'nunjucks-markdown';
+
+const testmd = marked.parse('# Marked in Node.js\n\nRendered by **marked**.');
+console.log(testmd);
+
+
 // === SET UP EXPRESS === //
 
 var app = express();
@@ -35,7 +42,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 
 app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/dist/govuk/assets')))
 
-nunjucks.configure([
+var env = nunjucks.configure([
   'app/views',
   'node_modules/govuk-frontend/dist/'
 ],
@@ -49,7 +56,7 @@ app.set('view engine', 'html')
 app.use(express.json());
 app.use(express.static('public'));
 
-
+markdown.register(env, marked);
 
 // === UPLOAD A FILE === //
 
