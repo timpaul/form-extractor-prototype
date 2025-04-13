@@ -7652,13 +7652,14 @@ pre {
   display: block;
 }
 
-.markdown p, .markdown li {
+/* Apply default styles to html that's been converted from markdown */
+.markdown p, .markdown li, .markdown h1, .markdown h2, .markdown h3 {
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 @media print {
-  .markdown p, .markdown li {
+  .markdown p, .markdown li, .markdown h1, .markdown h2, .markdown h3 {
     font-family: sans-serif;
   }
 }
@@ -7669,6 +7670,21 @@ pre {
   text-decoration: underline;
   text-decoration-thickness: max(1px, .0625rem);
   text-underline-offset: 0.1578em;
+}
+.markdown a:link {
+  color: #1d70b8;
+}
+.markdown a:visited {
+  color: #4c2c92;
+}
+.markdown a:hover {
+  color: #003078;
+}
+.markdown a:active {
+  color: #0b0c0c;
+}
+.markdown a:focus {
+  color: #0b0c0c;
 }
 @media print {
   .markdown a {
@@ -7690,6 +7706,31 @@ pre {
   text-decoration: none;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+}
+.markdown h1 {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.0416666667;
+}
+@media print {
+  .markdown h1 {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .markdown h1 {
+    font-size: 2.25rem;
+    line-height: 1.1111111111;
+  }
+}
+@media print {
+  .markdown h1 {
+    font-size: 24pt;
+    line-height: 1.05;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -198,11 +198,16 @@ pre {
 }
 
 
+/* Apply default styles to html that's been converted from markdown */
 .markdown{
-	p, li{
+	p, li, h1, h2, h3{
 		@include govuk-typography-common;
 	}
 	a{
+		@include govuk-link-style-default;
 		@include govuk-link-common;
+	}
+	h1{
+		@include govuk-font(36, $weight: "bold");
 	}
 }

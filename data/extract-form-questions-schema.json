@@ -8,13 +8,13 @@
             },
           "pages": {
               "type": "array",
-              "description": "An array of the questions in the form. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes.",
+              "description": "An array of the form questions in the image. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes. If the image contains no form fields it's an information page and you should set the answer_settings to information_page and add the contents of the page to the information item.",
               "items": {
                 "type": "object",
                 "required": ["id", "question_text", "answer_type"],
                 "properties": {
                   "id": {
-                      "type": "number",
+                      "type": "integer",
                       "description": "The number of the question. If the questions in the image don't have numbers, number them sequentially, starting at 1."
                   },
                   "question_text": {
@@ -27,11 +27,11 @@
                   },
                   "needs_routing": {
                       "type": "boolean",
-                      "description": "True if any part of the question contains text like 'Go to page...' or 'Go to question...'"
+                      "description": "True if any part of the question contains text like 'Go to page' or 'Go to question'"
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of question being asked, based on the fields. If there are no form fields, it's not a question it's an information page and the content should be converted to the Markdown syntax. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
+                      "description": "The type of question being asked, based on the fields. If there are no form fields, it's not a question it's an information page and the content should be converted to the Markdown syntax. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If any part of the question contains text like 'Tick one box' it's a single_choice' question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
                       "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "yes_no_question", "information_page"]
                   },
                   "answer_settings": {
@@ -46,7 +46,7 @@
                   },
                   "information": {
                       "type": "string",
-                      "description": "If the answer_type is information_page, return the contents here in Markdown syntax" 
+                      "description": "If the answer_type is information_page, return the contents here in Markdown syntax. Remember to use double line breaks between paragraphs. List item bullets should be rendered as * not •." 
                   },
                   "options": {
                     "type": "array",
