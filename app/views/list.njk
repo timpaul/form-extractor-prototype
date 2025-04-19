@@ -14,9 +14,8 @@
     <div class="question">
       <span class="govuk-caption-m">Question {{loop.index}}</span>
       <h3 class="govuk-heading-m">{{question.question_text}}</h3>
-
-      <p class="govuk-body">ID: {{question.id}}</p>
       <p class="govuk-body">Hint: {{question.hint_text}}</p>
+      <p class="govuk-body">Help: {{question.help_text}}</p>
       <p class="govuk-body">Type: {{question.answer_type}}</p>
       <p class="govuk-body">Settings: {{question.answer_settings.input_type}}</p>
       <p class="govuk-body">Needs routing: {{question.needs_routing}}</p>

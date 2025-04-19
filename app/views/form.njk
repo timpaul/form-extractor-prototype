@@ -104,7 +104,7 @@
           {{ answerType.text(questionJson.question_text, questionJson.hint_text) }}
 
         {% elif questionJson.answer_type == "text_area" %}
-          {{ answerType.text_area(questionJson.question_text, questionJson.hint_text) }}
+          {{ answerType.text_area(questionJson.question_text, questionJson.hint_text) }}   
 
         {% elif questionJson.answer_type == "national_insurance_number" %}
           {{ answerType.national_insurance_number(questionJson.question_text, questionJson.hint_text) }}
