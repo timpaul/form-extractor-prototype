@@ -88,6 +88,9 @@
         {% elif questionJson.answer_type == "date" %}
           {{ answerType.other_date(questionJson.question_text, questionJson.hint_text) }}
 
+        {% elif questionJson.answer_type == "time_period" %}
+          {{ answerType.time_period(questionJson.question_text, questionJson.hint_text) }}
+
         {% elif questionJson.answer_type == "name" %}
           {{ answerType.name(questionJson.question_text, questionJson.hint_text) }}
 
@@ -99,7 +102,6 @@
 
         {% elif questionJson.answer_type == "text" %}
           {{ answerType.text(questionJson.question_text, questionJson.hint_text) }}
-
 
         {% elif questionJson.answer_type == "text_area" %}
           {{ answerType.text_area(questionJson.question_text, questionJson.hint_text) }}

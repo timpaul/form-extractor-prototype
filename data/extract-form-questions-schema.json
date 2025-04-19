@@ -32,7 +32,23 @@
                   "answer_type": {
                       "type": "string",
                       "description": "The type of question being asked, based on the fields. If there are no form fields, it's not a question it's an information page and the content should be converted to the Markdown syntax. If it's a large box for writing multiple lines of text, it's a text_area. If any part of the question contains text like 'Tick the boxes...' it's a multiple_choice question. If any part of the question contains text like 'Tick one box' it's a single_choice' question. If a question contains square boxes it's a multiple_choice question. If it's asking how many of something there is, it's a number question.",
-                      "enum": ["number", "email", "name", "national_insurance_number", "phone_number", "organisation_name", "address", "date", "single_choice", "multiple_choice", "text", "text_area", "yes_no_question", "information_page"]
+                      "enum": [
+                        "number", 
+                        "email", 
+                        "name", 
+                        "national_insurance_number", 
+                        "phone_number", 
+                        "organisation_name", 
+                        "address", 
+                        "date", 
+                        "time_period",
+                        "single_choice", 
+                        "multiple_choice", 
+                        "text", 
+                        "text_area", 
+                        "yes_no_question", 
+                        "information_page"
+                      ]
                   },
                   "answer_settings": {
                       "type": "object",
