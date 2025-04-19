@@ -15,13 +15,8 @@ import fetch from 'node-fetch';
 import { fromPath } from "pdf2pic";
 import multer from 'multer';
 import { performance } from 'perf_hooks';
-
-
 import { marked } from 'marked';
 import markdown from 'nunjucks-markdown';
-
-const testmd = marked.parse('# Marked in Node.js\n\nRendered by **marked**.');
-console.log(testmd);
 
 
 // === SET UP EXPRESS === //

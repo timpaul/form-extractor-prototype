@@ -4,6 +4,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 
 {# NAME #}
@@ -160,6 +161,23 @@
 }) }}
 {% endmacro %}
 
+
+{# TEXT AREA #}
+
+{% macro text_area(question, hint) %}
+{{ govukTextarea({
+  name: "textarea",
+  id: "textarea",
+  label: {
+    text: question,
+    classes: "govuk-label--l",
+    isPageHeading: true
+  },
+  hint: {
+    text: hint
+  }
+}) }}
+{% endmacro %}
 
 
 {# NATIONAL INSURANCE NUMBER #}
