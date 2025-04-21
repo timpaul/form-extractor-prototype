@@ -15,12 +15,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-
-
 {% block beforeContent %}
+  {% set lastQuestion = fileData.formStructure[fileData.formStructure.length-1] %}
     {{ govukBackLink({
       text: "Back",
-      href: "/form-popup/" + formId + "/" + question 
+      href: "/forms/" + formId + "/" + pageNum + "/" + lastQuestion
     }) }}
 {% endblock %}
 

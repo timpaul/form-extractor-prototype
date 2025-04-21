@@ -137,7 +137,7 @@
       {% endif %}
 
       
-      {% if fileData.pages.length == question %}
+      {% if fileData.pages.length - 1 == questionIndex %}
         {{ govukButton({
           text: "Continue",
           href: "/forms/" + formId + "/" + pageNum + "/" + question + "/check-answers"

@@ -8,13 +8,13 @@
             },
           "pages": {
               "type": "array",
-              "description": "An array of the form questions in the image. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes. Regions of the image can only below to one question.",
+              "description": "An array of the form questions in the image. A question typically consists of a question title, some optional hint text and one or more form fields. Form fields typically look like boxes. Regions of the image can only belong to one question. Ignore any regions titled 'For official use only'.",
               "items": {
                 "type": "object",
-                "required": ["question_text", "answer_type"],
+                "required": ["question_text", "answer_type", "options"],
                 "properties": {
                   "question_number": {
-                      "type": "string",
+                      "type": "integer",
                       "description": "The number of the question"
                   },
                   "question_text": {
@@ -35,7 +35,7 @@
                   },
                   "answer_type": {
                       "type": "string",
-                      "description": "The type of answer required, based on the question title and the form fields. Use the following to help you decide what kind of answer it is: It's an information_page if there are no form fields on the page. Convert the contents of the page to Markdown syntax. It's a number if the question is asking how much or many of something there is, or for a numerical quantity. It's a text_area if the question includes a large box for writing multiple lines or paragraphs of text. It's a multiple_choice if the question contains multiple square boxes and text like 'Tick the boxes' or 'Select all that apply'. It's a single_choice if the question contains multiple square boxes and text like 'Tick one box' or 'Select one option'. It's a yes_no_question if the question requires a yes/no response and contains two boxes. It's a time_period if the response required is in years, months, days hours, minutes or seconds.",
+                      "description": "The type of answer required, based on the question title and the form fields. Use the following to help you decide what kind of answer it is: It's an information_page if there are no form fields on the page - convert the contents of the page to Markdown syntax. It's a number if the question is asking how much or many of something there is, or for a numerical quantity. It's a text_area if the question includes a large box for writing multiple lines or paragraphs of text. It's a date if it contains date fields like day, month, year. It's a multiple_choice if the question contains multiple square boxes and text like 'Tick the boxes' or 'Select all that apply'. It's a single_choice if the question contains multiple square boxes and text like 'Tick one box' or 'Select one option'. It's a yes_no_question if the question requires a yes/no response and contains two boxes. It's a time_period if the response required is in years, months, days hours, minutes or seconds.",
                       "enum": [
                         "number", 
                         "email", 
