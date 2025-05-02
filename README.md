@@ -2,11 +2,7 @@
 
 This tool extracts the structure from a PDF or image of a form.
 
-By default it uses the gpt-4o model by OpenAI.
-
-But it can also use the Claude 3 LLM.
-
-A single extraction of an A4 form page costs about 10p.
+It's currently using Google Gemini Flash 2.5.
 
 It replicates the form structure in JSON, following the schema used by [GOV.UK Forms](https://www.forms.service.gov.uk/).
 
