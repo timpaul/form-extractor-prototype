@@ -80,7 +80,7 @@ The results are saved as a JSON files in the subfolders in [public/results](http
 
 Those files are used to generate the pages that are loaded into iframes in [app/views/index.html](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/index.html).
 
-The form components are specificed in [app/views/answer-types.njk](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/answer-types.njk)
+The form components are specified in [app/views/answer-types.njk](https://github.com/timpaul/form-extractor-prototype/blob/main/app/views/answer-types.njk)
 
 They are built using the Nunjucks components in [GOV.UK Frontend](https://www.npmjs.com/package/govuk-frontend).
 
